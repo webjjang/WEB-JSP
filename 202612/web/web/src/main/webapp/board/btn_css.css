@@ -1,0 +1,13 @@
+@charset "UTF-8";
+.btn_a{
+	border: 2px dashed #888;
+	padding: 5px;
+	margin: 5px;
+	text-decoration: none;
+	color: #888;
+	background: white;
+}
+.btn_a:hover {
+	color: white;
+	background: #cc0044;
+}
