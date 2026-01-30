@@ -13,6 +13,12 @@
   <!-- Google Icon API 라이브러리 등록 ------------------------------------>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+<!-- 개발자 CSS --------------->
+<style type="text/css">
+#imgList{
+	list-style-image: url("img/subway.png");
+}
+</style>
 </head>
 <body>
 <!-- 맨처음 나타나는 메뉴 처리하는 부분의 시작 ----------------------------------------- -->
@@ -62,6 +68,9 @@
 	<li><sub><i class="material-icons">directions_run</i></sub> DB</li>
 	<li><sub><i class="material-icons">directions_run</i></sub> React</li>
 	<li><sub><i class="material-icons">directions_run</i></sub> API</li>
+</ul>
+<ul id="imgList">
+	<li>의료 자료 풀스택 과정</li>
 </ul>
 </body>
 </html>
