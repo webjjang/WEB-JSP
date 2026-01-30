@@ -1,0 +1,87 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>일반게시판 리스트</title>
+<!-- Bootstrap 라이브러리 등록 --------- -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- jQuery 라이브러리 등록 - 자바스크립트 함수 : jQuery() ==> $() -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+<style type="text/css">
+/* :hover - 마우스가 오라 갔을 때 CSS. 공백없이 :hover 작성  */
+.dataRow:hover{
+	/* background: #888; /* 배경색 변경 - BootStrap 5에서 적용이 안됨 */
+	cursor: pointer; /* 손가락 */
+}
+</style>
+
+<!-- 동작을 시키는 JS : 위치와 상관없이 코딩할 수 있다. -->
+<script type="text/javascript">
+ // jQuery :: 아래 HTML이 로딩이 끝나면 실행 줘 - $() 사이에 실행할 function을 넘긴다. body가 다 로딩이 되면 function이 실행됨.
+ $(function(){
+	 // alert("jQuery 영역이 실행됐다.~~~"); // 자바 스크립트의 팝업 열기
+	 $(".dataRow").click(function(){ // jquery입니다. 클래스가 dataRow인 것을 찾아서 클릭을 하면 전달된 함수를 실행한다.
+		 // alert("데이터 클릭 - 글보기 이동 준비 중....");
+	 	// 글번호 수집
+	 	let no = $(this).find(".no").text(); // js = jQuery
+	 	// alert("클릭한 글번호 : " + no); // js
+	 	// 페이지 이동 시키기 - 브라우저 객체 중 location 객체가 있다. 보여지는 페이지들의 정보를 가지고 있는 객체
+	 	// location.href = "view.jsp?no=" + no; // location = "url" == location.href = "url"
+	 	location = "view.jsp?no=" + no;
+	 }).mouseover(function(){
+		 $(this).addClass("table-success");
+	 }).mouseout(function(){
+		 $(this).removeClass("table-success");
+	 });
+ });
+</script>
+</head>
+<body>
+<div class="container">
+	<h2>일반게시판 리스트</h2>
+	<table class="table">
+		<thead class="table-dark">
+			<tr>
+				<th>번호</th>
+				<th>제목</th>
+				<th>작성자</th>
+				<th>작성일</th>
+				<th>조회수</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="dataRow">
+				<td class="no">10</td>
+				<td>자바란 무엇일까요?</td>
+				<td>홍길동</td>
+				<td>2026.01.30</td>
+				<td>20</td>
+			</tr>
+			<tr class="dataRow">
+				<td class="no">9</td>
+				<td>오라클란 무엇일까요?</td>
+				<td>손흥민</td>
+				<td>2026.01.29</td>
+				<td>51</td>
+			</tr>
+			<tr class="dataRow">
+				<td class="no">8</td>
+				<td>부트 캠프 진행 중 입니다.</td>
+				<td>관리자</td>
+				<td>2026.01.25</td>
+				<td>18</td>
+			</tr>
+		</tbody>
+	</table>
+	<a href="writeForm.jsp" class="btn btn-primary">글등록</a>
+	<a href="list.jsp" class="btn btn-success">새로고침</a>
+</div>
+</body>
+</html>
