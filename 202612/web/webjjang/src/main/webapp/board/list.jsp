@@ -1,5 +1,15 @@
+<%@page import="com.webjjang.board.service.BoardListService"%>
+<%@page import="com.webjjang.main.service.Execute"%>
+<%@page import="com.webjjang.board.vo.BoardVO"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+// 데이터 수집 처리를 먼저한다.
+	@SuppressWarnings("unchecked")
+	// DB에서 데이터 수집을 해온다.
+	List<BoardVO> list = (List<BoardVO>) Execute.execute(new BoardListService(), null);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -87,5 +97,7 @@
 	<a href="writeForm.jsp" class="btn btn-primary">글등록</a>
 	<a href="list.jsp" class="btn btn-success">새로고침</a>
 </div>
+<%-- JSP의 주석 : 표현식으로 가져온 데이터 출력 --%>
+<%= list %>
 </body>
 </html>
