@@ -15,7 +15,7 @@
 
 <style type="text/css">
 #deleteDiv{
-	visibility: hidden;
+	display: none;
 }
 </style>
 
@@ -25,7 +25,11 @@
  $(function(){
 	 // alert("jQuery 영역이 실행됐다.~~~"); // 자바 스크립트의 팝업 열기
 	 $("#deleteBtn").click(function(){
-		alert("삭제 버튼 클릭"); 
+		// alert("삭제 버튼 클릭");
+		// 입력된 비밀번호 삭제
+		$("#pw").val(""); //jQuery val() - getter, val(data) - setter
+		// disply 속성에서 보이게 show(), 안보이게 hide(), 보이면 안보이게 안보이면 보이게 toggle()
+		$("#deleteDiv").toggle();
 	 });
  });
 </script>
@@ -68,12 +72,15 @@
 	<!-- 삭제를 위한 비밀번호 입력 div -->
 	<div id="deleteDiv">
 		<form action="delete.jsp" method="post">
+			<!-- 글번호는 자동으로 넘어가게한다. 안보이게(사용자가 입력할 수 없다) 세팅해 준다. -->
+			<input type="hidden" name="no" value="${param.no }">
 		  <div class="mb-3">
 		    <label for="pw" class="form-label">본인 확인 비밀번호 입력</label>
-		    <input type="password" class="form-control" id="pw" placeholder="비밀번호를 입력하세요." name="pw">
+		    <input type="password" class="form-control" id="pw" placeholder="비밀번호를 입력하세요."
+		     name="pw">
 		  </div>
 		  <!-- button tag의 기본 타입은 submit 입니다. 타입에서 button -동작없음. reset - 처음 데이터 -->
-		  <button class="btn btn-danger">전송</button>
+		  <button class="btn btn-danger btn-sm">전송</button>
 		</form>
 	</div>
 </div>
