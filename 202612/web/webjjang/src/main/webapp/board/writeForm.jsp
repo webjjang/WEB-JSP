@@ -9,6 +9,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- jQuery 라이브러리 등록 - 자바스크립트 함수 : jQuery() ==> $() -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+ 
+  <script type="text/javascript">
+  $(function(){
+	  $(".cancelBtn").click(function(){
+		 // alert("취소 버튼 클릭~~~!");
+		 history.back();
+	  });
+  });
+  </script>
+  
 </head>
 <body>
 <div class="container">
@@ -38,6 +51,8 @@
 	    <input type="password" class="form-control" id="pw2" placeholder="비밀번호 확인을 입력하세요.">
 	  </div>
 	  <button type="submit" class="btn btn-primary">등록</button>
+	  <button type="reset" class="btn btn-warning">새로입력</button>
+	  <button type="button" class="cancelBtn btn btn-secondary">취소</button>
 	</form>
 </div>
 </body>

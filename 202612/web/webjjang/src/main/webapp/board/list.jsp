@@ -30,10 +30,14 @@
 	 $(".dataRow").click(function(){ // jquery입니다. 클래스가 dataRow인 것을 찾아서 클릭을 하면 전달된 함수를 실행한다.
 		 // alert("데이터 클릭 - 글보기 이동 준비 중....");
 	 	// 글번호 수집
+	 	// text() - 글자만 가져온다. html() - tag도 가져온다. :: jQuery
+	 	// js의 변수는 타입이 없다. - 변수 = 10 - 선언 없이 바로 사용가능. var로 변수 선언. let으로 변수 선언.-지역변수 구분 확실
 	 	let no = $(this).find(".no").text(); // js = jQuery
 	 	// alert("클릭한 글번호 : " + no); // js
 	 	// 페이지 이동 시키기 - 브라우저 객체 중 location 객체가 있다. 보여지는 페이지들의 정보를 가지고 있는 객체
+	 	// location 객체 - BOM 객체 중에 하나.
 	 	// location.href = "view.jsp?no=" + no; // location = "url" == location.href = "url"
+	 	// location = "url" : 자동으로 location.href에 들어간다.
 	 	location = "view.jsp?no=" + no;
 	 }).mouseover(function(){
 		 $(this).addClass("table-success");
