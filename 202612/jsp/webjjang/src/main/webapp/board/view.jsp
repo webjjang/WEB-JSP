@@ -67,6 +67,11 @@ request.setAttribute("vo", vo);
 </script>
 </head>
 <body>
+
+<!-- 메인 메뉴 부분 ------------------------------------ -->
+<%@ include file="../inc/mainMenu.jsp" %>
+<!-- 메인 메뉴 부분 끝 ------------------------------------ -->
+
 <div class="container">
 	<h2>일반게시판 글보기</h2>
 	<table class="table">
