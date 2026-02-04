@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <!-- 프로젝트 이름 -->
+  <display-name>servlet</display-name>
+  <welcome-file-list> 
+    <!-- 홈페이지 들어가면 서버이름이나 도메인을 사용하면 자동으로 요청되는 URI -->
+    <welcome-file>main.do</welcome-file>
+  </welcome-file-list>
+  
+  <!-- servlet 객체 등록 : DispatchServlet -->
+  <servlet>
+  	<servlet-name>dispatchServlet</servlet-name>
+  	<servlet-class>com.webjjang.main.controller.DispatcherServlet</servlet-class>
+  	<!-- 서버가 실행될때 한번 불러라. init() 호출되서 실행된다. -->
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <!-- servlet에 URI를 매핑시틴다. -->
+  <servlet-mapping>
+  	<servlet-name>dispatchServlet</servlet-name>
+  	<url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>init</servlet-name>
+  	<servlet-class>com.webjjang.main.controller.Init</servlet-class>
+  	<!-- 서버가 실행될때 한번 불러라. init() 호출되서 실행된다. -->
+  	<load-on-startup>2</load-on-startup>
+  </servlet>
+  
+</web-app>
