@@ -1,26 +1,17 @@
 package com.webjjang.board.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.webjjang.board.vo.BoardVO;
+import com.webjjang.main.dao.DAO;
 import com.webjjang.util.db.DB;
 
 //Main - BoardController - Board***Service - (BoardDAO) // BoardVO
 // DAO - Data Access Object : DB처리 프로그램
-public class BoardDAO {
+public class BoardDAO extends DAO{
 	
-	// DB필요한 객체
-	// DB 연결 객체 - DB 회사에서 제공하는 드라이버를 사용한다.
-	// 드라이버가 필요하다. 오라클인 경우 설치하면 폴더 안에 존재한다. - 라이브러리로 등록 시킨다.
-	Connection con = null;
-	// 쿼리를 실행하는 객체
-	PreparedStatement pstmt = null;
-	// 결과를 저장하는 객체 - select 일때만 사용되는 객체
-	ResultSet rs = null;
+	// DB필요한 객체 - DAO 클래스를 상속받아서 해결
 	
 	// DB 연결 정보 -> com.webjjang.util.db.DB 이동
 	

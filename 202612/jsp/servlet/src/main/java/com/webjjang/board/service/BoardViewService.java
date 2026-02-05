@@ -2,11 +2,19 @@ package com.webjjang.board.service;
 
 import com.webjjang.board.dao.BoardDAO;
 import com.webjjang.board.vo.BoardVO;
+import com.webjjang.main.dao.DAO;
 import com.webjjang.main.service.Service;
 
 //Main - BoardController - (BoardViewService) - BoardDAO // BoardVO
 public class BoardViewService implements Service{
 
+	private BoardDAO dao = null;
+	
+	// Init에서 이미 생성된 dao를 전달해서 저장해 놓는다. - 서버가 시작될 때 : 코딩 필
+	public void setDAO(DAO dao) {
+		this.dao = (BoardDAO) dao;
+	}
+	
 	// Service를 실행하면 리턴타입은 무엇이 나올까요?
 	// 일반게시판 리스트의 리턴 타입 : List<BoardVO>
 	// 일반게시판 글보기의 리턴 타입 : BoardVO
@@ -16,7 +24,6 @@ public class BoardViewService implements Service{
 		Long[] arrs = (Long[]) obj;
 		Long no = arrs[0];
 		Long inc = arrs[1]; // 1-조회수 1증가 함. 0- 조회수 1증가 안함.
-		BoardDAO dao = new BoardDAO();
 		if(inc == 1) {
 			// 1. 조회수 1 증가
 			// DB 처리 : list - List<VO>, view - VO, 외 update, delete, insert 문의 결과는 Integer

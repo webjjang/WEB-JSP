@@ -29,6 +29,7 @@ public class DispatcherServlet extends HttpServlet {
 	/**
 	 * @see Servlet#init(ServletConfig)
 	 */
+    // 서버가 시작될 때 한번 호출한다. 단, web.xml에 servlet 태그 안에 load-on-starup 이 설정되어있어야만 한다.
 	public void init(ServletConfig config) throws ServletException {
 		// TODO Auto-generated method stub
 		System.out.println("DispatcherServlet.init() -------------------------------------");
@@ -43,16 +44,17 @@ public class DispatcherServlet extends HttpServlet {
 		// 흐름 로그 출력
 		System.out.println("DispatcherServlet.service() -------------------------------------");
 		
-		// uri를 request에서 부터 가져 온다. 실제적으로는 path를 제외한 servletPath를 가져온다.
+		// 0. uri를 request에서 부터 가져 온다. 실제적으로는 path를 제외한 servletPath를 가져온다.
 		String uri = request.getServletPath();
 		System.out.println("DispatcherServlet.service().uri = " + uri);
 		
-		// homepage 리다이렉트(변경 다시 요청) 처리  "/", "/main.do" -> "/main/main.do"
+		// 1. homepage 리다이렉트(변경 다시 요청) 처리  "/", "/main.do" -> "/main/main.do"
 		if(uri.equals("/") || uri.equals("/main.do")) {
 			response.sendRedirect("/main/main.do");
 			return;
 		}
 		
+		// 2. 모듈 명 꺼내기 - Controller 선택
 		// 실행 모듈(Controller)을 선택하기 위한 모듈 이름 꺼내기
 		int pos = uri.indexOf("/", 1);
 		// pos가 -1이면 모듈이 없음. 요청하신 페이지 없음.
@@ -64,8 +66,10 @@ public class DispatcherServlet extends HttpServlet {
 		// 모듈 출력하기
 		System.out.println("DispatcherServlet.service().module = " + module);
 		
-		// 모듈을 가지고 Controller를 꺼내오자
+		// 모듈을 가지고 Controller를 꺼내오자 : 선택
 		Controller controller = Init.getController(module);
+		
+		// 3. 모듈 실행
 		if(controller != null) { 
 			System.out.println("DispatcherServlet.service().Controller 이름 출력 : " + controller.getClass().getName());
 			// 가져온 Controller를 실행해서 처리한다.
@@ -74,6 +78,8 @@ public class DispatcherServlet extends HttpServlet {
 			return;
 		}
 		
+		// 4. JSP로 forward 또는 redirect
+		//  - JSP나 redirect의 정보는 각 Controller에서 결정이된다. 그래서 리턴 타입을 String 정의한다.
 	}
 
 }

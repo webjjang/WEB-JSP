@@ -9,6 +9,7 @@ import com.webjjang.board.service.BoardViewService;
 import com.webjjang.board.service.BoardWriteService;
 import com.webjjang.board.vo.BoardVO;
 import com.webjjang.main.controller.Controller;
+import com.webjjang.main.controller.Init;
 import com.webjjang.main.controller.Main;
 import com.webjjang.main.service.Execute;
 import com.webjjang.util.io.BoardPrint;
@@ -25,6 +26,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class BoardController implements Controller{
 
 	// PL이 메서드 이름을 정한다.
+	// String 리턴 타입의 데이터는 forward 시킬 JSP의 정보이거나 redirect시킬 정보이다. 
 	public String execute(HttpServletRequest request) {
 		try { // 정상처리
 			// 요청 uri에 따라서 처리된다.
@@ -32,7 +34,7 @@ public class BoardController implements Controller{
 			// 1. 일반게시판 메뉴 입력
 			String uri = request.getServletPath();
 			
-			// 3. 일반게시판 메뉴 처리
+			// 2. 일반게시판 메뉴 처리
 			// 사용 변수 선언
 			BoardVO vo;
 			Integer result;
@@ -40,13 +42,10 @@ public class BoardController implements Controller{
 			switch (uri) {
 			case "/board/list.do":
 				// System.out.println("일반게시판 리스트 처리");
-				// Service를 바로 생성하고 실행 -> Execute가 실행하면 로그를 남긴다.
-				// List<BoardVO> list = new BoardListService().service(null);
-				@SuppressWarnings("unchecked")
+				// 생성된 Service를 가져와서 실행 -> Execute가 실행하면 로그를 남긴다.
 				// DB에서 데이터 수집을 해온다.
-				List<BoardVO> list = (List<BoardVO>) Execute.execute(new BoardListService(), null);
 				// 사용자에게 제공한다.
-				request.setAttribute("list", list);
+				request.setAttribute("list", Execute.execute(Init.getService(uri), null));
 				break;
 			case "/board/view.do":
 				// System.out.println("일반게시판 글보기 처리");
