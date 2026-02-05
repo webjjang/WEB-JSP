@@ -88,6 +88,7 @@ public class DispatcherServlet extends HttpServlet {
 		// 4. JSP로 forward 또는 redirect
 		//  - JSP나 redirect의 정보는 각 Controller에서 결정이된다. 그래서 리턴 타입을 String 정의한다.
 		//  jsp 변수 값의 맨 처음에 redirect:이 붙으면 redirect를 시킨다. 아니면 forward시킨다.
+		System.out.println("DispatcherServlet.service().jsp - " + jsp);
 		//  0이면 redirect 시킨다. 0이 아니면 forward 시킨다.
 		int isRedirect = jsp.indexOf("redirect:");
 		if(isRedirect == 0) {

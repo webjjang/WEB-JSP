@@ -49,78 +49,93 @@ public class BoardController implements Controller{
 				// jsp의 위치 정보 "/WEB-INF/views/" + "board/list" + ".jsp"
 				return "board/list";
 			case "/board/view.do":
-				// System.out.println("일반게시판 글보기 처리");
-				no = In.getLong("번호");
+				// 글번호를 받는다. 1증가 데이터를 받는다. - 2개의 데이터는 반드시 넘어와야만 한다.
+				no = Long.parseLong(request.getParameter("no"));
+				long inc = Long.parseLong(request.getParameter("inc"));
+
+				//DB에서 데이터 가져오기
 				// new Long[] {no, 1L} - new Long[] {번호[0], 증가[1]} - 생성하고 바로 초기값을 세팅한다.
-				vo = (BoardVO) Execute.execute(new BoardViewService(), new Long[] {no, 1L});
-				BoardPrint.print(vo);
+				// EL 또는 JSTL을 사용하기 위해서 4개의 저장 - request에 담자.
+				request.setAttribute("vo", Execute.execute(Init.getService(uri), new Long[] {no, inc}));
 				
-				break;
+				// jsp의 위치 정보 "/WEB-INF/views/" + "board/view" + ".jsp"
+				return "board/view";
+				
 			case "/board/writeForm.do":
-				// System.out.println("일반게시판 글등록 처리");
-				// 사용자에게 데이터 받기 - 제목, 내용, 작성자, 비밀번호 - vo에 저장한다.
-				//   - BoardVO를 생성 -> 데이터 받기 setter()와 In.getStr()이용.
-				vo = new BoardVO();
-				vo.setTitle(In.getStr("제목"));
-				vo.setContent(In.getStr("내용"));
-				vo.setWriter(In.getStr("작성자"));
-				vo.setPw(In.getStr("비밀번호"));
-				result = (Integer) Execute.execute(new BoardWriteService(), vo);
-				break;
+				// jsp의 위치 정보 "/WEB-INF/views/" + "board/writeForm" + ".jsp"
+				return "board/writeForm";
+				
 			case "/board/write.do":
 				// System.out.println("일반게시판 글등록 처리");
 				// 사용자에게 데이터 받기 - 제목, 내용, 작성자, 비밀번호 - vo에 저장한다.
+				System.out.println("write.do - 글등록 처리");
+				// 넘어오는 데이터 수집
+				// 사용자에게 데이터 받기 - 제목, 내용, 작성자, 비밀번호 - vo에 저장한다.
 				//   - BoardVO를 생성 -> 데이터 받기 setter()와 In.getStr()이용.
 				vo = new BoardVO();
-				vo.setTitle(In.getStr("제목"));
-				vo.setContent(In.getStr("내용"));
-				vo.setWriter(In.getStr("작성자"));
-				vo.setPw(In.getStr("비밀번호"));
-				result = (Integer) Execute.execute(new BoardWriteService(), vo);
-				break;
-			case "4":
-				// System.out.println("일반게시판 글수정 처리");
+				vo.setTitle(request.getParameter("title"));
+				vo.setContent(request.getParameter("content"));
+				vo.setWriter(request.getParameter("writer"));
+				vo.setPw(request.getParameter("pw"));
+				Execute.execute(Init.getService(uri), vo);
 				
-				// 1. 수정할 글번호를 입력 받는다.
-				no = In.getLong("번호");
+				// 처리 결과 메시지 담기.
+				request.getSession().setAttribute("msg", "글등록이 되었습니다.");
 				
-				// 2. 입력 받은 글번호의 데이터를 가져온다.(vo = 글보기)
+				return "redirect:list.do";
+				
+			case "/board/updateForm.do":
+				// System.out.println("일반게시판 글수정 폼");
+				
+				// 글번호를 받는다. 1증가 데이터를 받는다. - 2개의 데이터는 반드시 넘어와야만 한다.
+				no = Long.parseLong(request.getParameter("no"));
+				inc = Long.parseLong(request.getParameter("inc"));
+
+				//DB에서 데이터 가져오기
 				// new Long[] {no, 1L} - new Long[] {번호[0], 증가[1]} - 생성하고 바로 초기값을 세팅한다.
-				vo = (BoardVO) Execute.execute(new BoardViewService(), new Long[] {no, 0L});
-				BoardPrint.print(vo);
-				// 3. 가져온 데이터를 수정 입력한다.(수정 항목 선택 -> 입력 : 입력 끝남 선택 빠져나온다.)
-				Integer item = update(vo);
-				// 4. DB 수정하러 간다.(BoardUpdateService)
-				//   수정 데이터 확인
-//					System.out.println("------- 수정 데이터 확인 -----------------");
-//					BoardPrint.print(vo);
+				// EL 또는 JSTL을 사용하기 위해서 4개의 저장 - request에 담자.
+				request.setAttribute("vo", 
+						Execute.execute(Init.getService("/board/view.do"), new Long[] {no, inc}));
+				return "board/updateForm";
 				
-				if(item == 9) {
-					System.out.println("**** 수정이 취소 되었습니다. ****\n");
-				} else {
-					// 수정하러 간다.
-					// 본인 확인요 비밀번호를 받는다.
-					vo.setPw(In.getStr("본인 확인용 비밀번호"));
-					result = (Integer) Execute.execute(new BoardUpdateService(), vo);
-					if(result >= 1) System.out.println("******* 수정이 완료 되었습니다. ********");
-					else System.out.println("****** 수정이 되지 않았습니다. 정보를 다시 확인해 주세요. *******");
-				}
+			case "/board/update.do":
+				// System.out.println("일반게시판 글수정 처리");
+				// 넘어오는 데이터 수집
+				// 사용자에게 데이터 받기 - 제목, 내용, 작성자, 비밀번호 - vo에 저장한다.
+				//   - BoardVO를 생성 -> 데이터 받기 setter()와 In.getStr()이용.
+				vo = new BoardVO();
+				vo.setNo(Long.parseLong(request.getParameter("no")));
+				vo.setTitle(request.getParameter("title"));
+				vo.setContent(request.getParameter("content"));
+				vo.setWriter(request.getParameter("writer"));
+				vo.setPw(request.getParameter("pw"));
+				// DB에 저장
+				result = (Integer) Execute.execute(Init.getService(uri), vo);
 				
-				break;
-			case "5":
+				// 처리 결과 메시지 담기.
+				if(result == 1)
+					request.getSession().setAttribute("msg", "수정이 되었습니다.");
+				else
+					request.getSession().setAttribute("msg", "수정에 실패하였습니다. 정보를 확인해주세요.");
+				
+				return "redirect:view.do?no=" + vo.getNo() + "&inc=0";
+				
+			case "/board/delete.do":
 				System.out.println("일반게시판 글삭제 처리");
+				// request : 클라이언트가 서버에 요청. - 클라이언트 정보를 서버에 전달해주는데 저장해서 전달되는 객체
 				// 글번호와 비밀번호 받기 - vo
 				vo = new BoardVO();
-				vo.setNo(In.getLong("삭제할 글 번호"));
-				vo.setPw(In.getStr("본인 확인용 비밀번호"));
-				result = (Integer) Execute.execute(new BoardDeleteService(), vo);
-				if(result >= 1) System.out.println("******* 삭제가 완료 되었습니다. ********");
-				else System.out.println("****** 삭제가 되지 않았습니다. 정보를 다시 확인해 주세요. *******");
-				break;
-			case "0": // 이전 메뉴
-				// 자신을 호출한 프로그램으로 돌아간다. Main.main()
-				return null;
-
+				vo.setNo(Long.parseLong(request.getParameter("no")));
+				vo.setPw(request.getParameter("pw"));
+				result = (Integer) Execute.execute(Init.getService(uri), vo);
+				// 처리 결과 메시지 담기.
+				if(result == 1) {
+					request.getSession().setAttribute("msg", "삭제가 되었습니다.");
+					return "redirect:list.do";
+				} else {
+					request.getSession().setAttribute("msg", "삭제에 실패하였습니다. 정보를 확인해주세요.");
+					return "redirect:view.do?no=" + vo.getNo() + "&inc=0";
+				}
 			default:
 				// 잘못된 메뉴 처리
 				Main.invalidMenuPrint();
