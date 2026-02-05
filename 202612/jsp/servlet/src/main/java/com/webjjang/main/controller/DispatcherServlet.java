@@ -16,7 +16,11 @@ import java.io.IOException;
 // @WebServlet("/DispatcherServlet")
 public class DispatcherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    
+	// jsp 로 forward 할 앞에 붙는 글자와 뒤에 붙는 글자를 저장해 놓은 변수.
+	String prefix = "/WEB-INF/views/"; 
+	String suffix = ".jsp"; 
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -69,10 +73,13 @@ public class DispatcherServlet extends HttpServlet {
 		// 모듈을 가지고 Controller를 꺼내오자 : 선택
 		Controller controller = Init.getController(module);
 		
+		String jsp = null;
+		
 		// 3. 모듈 실행
 		if(controller != null) { 
 			System.out.println("DispatcherServlet.service().Controller 이름 출력 : " + controller.getClass().getName());
 			// 가져온 Controller를 실행해서 처리한다.
+			jsp = controller.execute(request);
 		} else {
 			System.out.println("DispatcherServlet.service() - 요청하신 페이지가 존재하지 않습니다.");
 			return;
@@ -80,6 +87,19 @@ public class DispatcherServlet extends HttpServlet {
 		
 		// 4. JSP로 forward 또는 redirect
 		//  - JSP나 redirect의 정보는 각 Controller에서 결정이된다. 그래서 리턴 타입을 String 정의한다.
+		//  jsp 변수 값의 맨 처음에 redirect:이 붙으면 redirect를 시킨다. 아니면 forward시킨다.
+		//  0이면 redirect 시킨다. 0이 아니면 forward 시킨다.
+		int isRedirect = jsp.indexOf("redirect:");
+		if(isRedirect == 0) {
+			// 앞에 붙은 redirect: 은 제거하고 나머지 데이터로 리다렉트시킨다.
+			response.sendRedirect(jsp.substring("redirect:".length()));
+			return;
+		} else {
+			// jsp로 forward 시킨다.
+			// /WEB-INF/views/ + board/list + .jsp
+			request.getRequestDispatcher(prefix + jsp + suffix).forward(request, response);
+			return;
+		}
 	}
 
 }
