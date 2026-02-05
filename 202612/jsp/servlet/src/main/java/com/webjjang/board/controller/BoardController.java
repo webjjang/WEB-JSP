@@ -46,7 +46,8 @@ public class BoardController implements Controller{
 				// DB에서 데이터 수집을 해온다.
 				// 사용자에게 제공한다.
 				request.setAttribute("list", Execute.execute(Init.getService(uri), null));
-				break;
+				// jsp의 위치 정보 "/WEB-INF/views/" + "board/list" + ".jsp"
+				return "board/list";
 			case "/board/view.do":
 				// System.out.println("일반게시판 글보기 처리");
 				no = In.getLong("번호");
