@@ -13,6 +13,11 @@ import com.webjjang.board.service.BoardWriteService;
 import com.webjjang.main.dao.DAO;
 import com.webjjang.main.service.Service;
 import com.webjjang.member.controller.MemberController;
+import com.webjjang.qna.controller.QnaController;
+import com.webjjang.qna.dao.QnaDAO;
+import com.webjjang.qna.service.QnaListService;
+import com.webjjang.qna.service.QnaQuestionService;
+import com.webjjang.qna.service.QnaViewService;
 
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -82,11 +87,24 @@ public class Init extends HttpServlet {
 		serviceMap.get("/board/update.do").setDAO(daoMap.get("boardDAO"));
 		serviceMap.get("/board/delete.do").setDAO(daoMap.get("boardDAO"));
 		
-		
-		
-		
 		// *** 회원관리 생성 / 저장 / 조립
 		controllerMap.put("/member", new MemberController());
+		
+		// *** 질문 답변 생성 / 저장 / 조립
+		// -- Controller 저장
+		controllerMap.put("/qna", new QnaController());
+		// -- Service 저장
+		serviceMap.put("/qna/list.do", new QnaListService());
+		serviceMap.put("/qna/view.do", new QnaViewService());
+		serviceMap.put("/qna/question.do", new QnaQuestionService());
+		// -- DAO 저장
+		daoMap.put("qnaDAO", new QnaDAO());
+		// 조립 service에 dao 넣기 - service를 가져온다. setter를 이용해서 가져온 dao를 넣는다.
+		serviceMap.get("/qna/list.do").setDAO(daoMap.get("qnaDAO"));
+		serviceMap.get("/qna/view.do").setDAO(daoMap.get("qnaDAO"));
+		serviceMap.get("/qna/question.do").setDAO(daoMap.get("qnaDAO"));
+		
+		System.out.println("Init.init() - 객체 로딩 완료 -----------------------------------");
 	}
 
 }
