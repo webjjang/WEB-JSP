@@ -5,13 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>질문/답변 보기</title>
-<!-- Bootstrap 5 라이브러리 등록 --------- -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap 5 라이브러리 등록 : default_decorator에 등록 --------- -->
 
-<!-- jQuery 라이브러리 등록 - 자바스크립트 함수 : jQuery() ==> $() -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- jQuery 라이브러리 등록 - 자바스크립트 함수 : jQuery() ==> $() : default_decorator에 등록 -->
 
 <style type="text/css">
 #deleteDiv, #answerDiv{
@@ -21,7 +17,7 @@
 
 <!-- 동작을 시키는 JS : 위치와 상관없이 코딩할 수 있다. -->
 <script type="text/javascript">
- ${(!empty msg)?"alert('" += msg += "');":""}
+ 
  // jQuery :: 아래 HTML이 로딩이 끝나면 실행 줘 - $() 사이에 실행할 function을 넘긴다. body가 다 로딩이 되면 function이 실행됨.
  $(function(){
 	 // alert("jQuery 영역이 실행됐다.~~~"); // 자바 스크립트의 팝업 열기
@@ -40,11 +36,8 @@
 </head>
 <body>
 
-<!-- 메인 메뉴 부분 ------------------------------------ -->
-<%@ include file="../inc/mainMenu.jsp" %>
-<!-- 메인 메뉴 부분 끝 ------------------------------------ -->
+<!-- 메인 메뉴 부분 : default_decorator에 등록  ------------------------------------ -->
 
-<div class="container">
 	<h2>질문/답변 보기</h2>
 	<table class="table">
 		<tbody>
@@ -107,10 +100,5 @@
 		</form>
 		
 	</div>
-</div>
 </body>
 </html>
-<%
-	// 글등록한 결과 메시지 지우기
-	session.removeAttribute("msg");
-%>

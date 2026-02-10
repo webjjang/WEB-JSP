@@ -5,13 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>질문 등록</title>
-<!-- Bootstrap 라이브러리 등록 --------- -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap 5 라이브러리 등록 : default_decorator에 등록 --------- -->
 
-<!-- jQuery 라이브러리 등록 - 자바스크립트 함수 : jQuery() ==> $() -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- jQuery 라이브러리 등록 - 자바스크립트 함수 : jQuery() ==> $() : default_decorator에 등록 -->
  
   <script type="text/javascript">
   $(function(){
@@ -24,7 +20,6 @@
   
 </head>
 <body>
-<div class="container">
 	<h2>질문 등록</h2>
 	<!-- URL & Header & body(data) 으로 넘기는 방식 : post -- 넘어가는 데이터가 보이지 않는다. -->
 	<form action="question.do" method="post">
@@ -44,6 +39,5 @@
 	  <button type="reset" class="btn btn-warning">새로입력</button>
 	  <button type="button" class="cancelBtn btn btn-secondary">취소</button>
 	</form>
-</div>
 </body>
 </html>
