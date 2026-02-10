@@ -148,13 +148,17 @@ public class QnaDAO extends DAO{
 		// 1. 드라이버 확인 & 2. 연결 객체
 		con = DB.getConnection();
 		// 3. SQL 작성
-		String sql = "insert into qna(no,title, content, writer, pw) values(qna_seq.nextval,?,?,?,?)";
+		String sql = "insert into qna(no, title, content, id, refNo, ordNo, levNo, parentNo) "
+				+ " values(qna_seq.nextval,?,?,?,?,?,?,?)";
 		// 4. 실행객체 & 데이터 세팅
 		pstmt = con.prepareStatement(sql);
 		pstmt.setString(1, vo.getTitle());
 		pstmt.setString(2, vo.getContent());
-//		pstmt.setString(3, vo.getWriter());
-//		pstmt.setString(4, vo.getPw());
+		pstmt.setString(3, vo.getId());
+		pstmt.setLong(4, vo.getRefNo());
+		pstmt.setLong(5, vo.getOrdNo());
+		pstmt.setLong(6, vo.getLevNo());
+		pstmt.setLong(7, vo.getParentNo());
 		// 5. 실행 //6. 데이터 저장
 		// select - executeQuery() : rs, insert, update, delete - executeUpdate() : Integer
 		result = pstmt.executeUpdate();
@@ -164,6 +168,27 @@ public class QnaDAO extends DAO{
 		return result;
 	} // answer()의 끝
 	
+	// 3-3. 답변 등록 전 같은 관련번호의 순서번호와 같거나 큰 번호 + 1 시킨다.
+	public Integer increaseOrd(QnaVO vo) throws Exception {
+		Integer result = 0;
+		
+		// 1. 드라이버 확인 & 2. 연결 객체
+		con = DB.getConnection();
+		// 3. SQL 작성
+		String sql = "update qna set ordNo = ordNo + 1 where refNo = ? and ordNo >= ?";
+		// 4. 실행객체 & 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		pstmt.setLong(1, vo.getRefNo());
+		pstmt.setLong(2, vo.getOrdNo());
+		// 5. 실행 //6. 데이터 저장
+		// select - executeQuery() : rs, insert, update, delete - executeUpdate() : Integer
+		result = pstmt.executeUpdate();
+		// 7. 닫기
+		DB.close(con, pstmt);
+		
+		return result;
+	}
+	
 	// 4. 질문답변 글수정
 	public Integer update(QnaVO vo) throws Exception {
 		Integer result = 0;
@@ -171,15 +196,13 @@ public class QnaDAO extends DAO{
 		// 1. 드라이버 확인 & 2. 연결 객체
 		con = DB.getConnection();
 		// 3. SQL 작성
-		String sql = "update qna set title = ?, content = ?, writer = ? "
-				+ " where no = ? and pw = ?";
+		String sql = "update qna set title = ?, content = ? "
+				+ " where no = ?";
 		// 4. 실행객체 & 데이터 세팅
 		pstmt = con.prepareStatement(sql);
 		pstmt.setString(1, vo.getTitle());
 		pstmt.setString(2, vo.getContent());
-//		pstmt.setString(3, vo.getWriter());
-		pstmt.setLong(4, vo.getNo());
-//		pstmt.setString(5, vo.getPw());
+		pstmt.setLong(3, vo.getNo());
 		// 5. 실행 & //6. 결과 저장
 		result = pstmt.executeUpdate();
 		// 7. 닫기
@@ -189,17 +212,16 @@ public class QnaDAO extends DAO{
 	}
 	
 	// 5. 질문답변 글삭제
-	public Integer delete(QnaVO vo) throws Exception{
+	public Integer delete(long no) throws Exception{
 		Integer result = 0;
 		
 		// 1. 드라이버 확인 & 2. 연결 객체
 		con = DB.getConnection();
 		// 3. SQL 작성
-		String sql = "delete from qna where no = ? and pw = ?";
+		String sql = "delete from qna where no = ?";
 		// 4. 실행객체 & 데이터 세팅
 		pstmt = con.prepareStatement(sql);
-		pstmt.setLong(1, vo.getNo());
-//		pstmt.setString(2, vo.getPw());
+		pstmt.setLong(1, no);
 		// 5. 실행 //6. 결과 저장
 		result = pstmt.executeUpdate();
 		// 7. 닫기

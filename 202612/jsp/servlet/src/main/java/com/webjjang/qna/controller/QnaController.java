@@ -57,8 +57,8 @@ public class QnaController implements Controller{
 				return "qna/questionForm";
 				
 			case "/qna/question.do":
-				// System.out.println("질문답변 글등록 처리");
-				// 사용자에게 데이터 받기 - 제목, 내용, 작성자, 비밀번호 - vo에 저장한다.
+				// System.out.println("질문 등록 처리");
+				// 사용자에게 데이터 받기 - 제목, 내용 - vo에 저장한다.
 				System.out.println("question.do - 질문 등록 처리");
 				// 넘어오는 데이터 수집
 				// 사용자에게 데이터 받기 - 제목, 내용, 작성자, 비밀번호 - vo에 저장한다.
@@ -68,6 +68,29 @@ public class QnaController implements Controller{
 				vo.setContent(request.getParameter("content"));
 				// 원래 아이디는 세션에서 가져와야 한다. Member table 에 있는 아이디를 하드코딩해서 입력
 				vo.setId("test");
+				Execute.execute(Init.getService(uri), vo);
+				
+				// 처리 결과 메시지 담기.
+				request.getSession().setAttribute("msg", "질문이 등록되었습니다.");
+				
+				return "redirect:list.do";
+				
+			case "/qna/answer.do":
+				// System.out.println("답변 등록 처리");
+				// 사용자에게 데이터 받기 - 제목, 내용, 4개의 번호 - vo에 저장한다.
+				System.out.println("answer.do - 답변 등록 처리");
+				// 넘어오는 데이터 수집
+				// 사용자에게 데이터 받기 - 제목, 내용, 작성자, 비밀번호 - vo에 저장한다.
+				//   - QnaVO를 생성 -> 데이터 받기 setter()와 In.getStr()이용.
+				vo = new QnaVO();
+				vo.setRefNo(Long.parseLong(request.getParameter("refNo")));
+				vo.setOrdNo(Long.parseLong(request.getParameter("ordNo")));
+				vo.setLevNo(Long.parseLong(request.getParameter("levNo")));
+				vo.setParentNo(Long.parseLong(request.getParameter("parentNo")));
+				vo.setTitle(request.getParameter("title"));
+				vo.setContent(request.getParameter("content"));
+				// 원래 아이디는 세션에서 가져와야 한다. Member table 에 있는 아이디를 하드코딩해서 입력
+				vo.setId("admin");
 				Execute.execute(Init.getService(uri), vo);
 				
 				// 처리 결과 메시지 담기.
@@ -92,14 +115,12 @@ public class QnaController implements Controller{
 			case "/qna/update.do":
 				// System.out.println("질문답변 글수정 처리");
 				// 넘어오는 데이터 수집
-				// 사용자에게 데이터 받기 - 제목, 내용, 작성자, 비밀번호 - vo에 저장한다.
+				// 사용자에게 데이터 받기 - 번호, 제목, 내용 - vo에 저장한다.
 				//   - QnaVO를 생성 -> 데이터 받기 setter()와 In.getStr()이용.
 				vo = new QnaVO();
 				vo.setNo(Long.parseLong(request.getParameter("no")));
 				vo.setTitle(request.getParameter("title"));
 				vo.setContent(request.getParameter("content"));
-				//vo.setWriter(request.getParameter("writer"));
-				//vo.setPw(request.getParameter("pw"));
 				// DB에 저장
 				result = (Integer) Execute.execute(Init.getService(uri), vo);
 				
@@ -114,18 +135,16 @@ public class QnaController implements Controller{
 			case "/qna/delete.do":
 				System.out.println("질문답변 글삭제 처리");
 				// request : 클라이언트가 서버에 요청. - 클라이언트 정보를 서버에 전달해주는데 저장해서 전달되는 객체
-				// 글번호와 비밀번호 받기 - vo
-				vo = new QnaVO();
-				vo.setNo(Long.parseLong(request.getParameter("no")));
-				// vo.setPw(request.getParameter("pw"));
-				result = (Integer) Execute.execute(Init.getService(uri), vo);
+				// 글번호만 받는다.
+				no = Long.parseLong(request.getParameter("no"));
+				result = (Integer) Execute.execute(Init.getService(uri), no);
 				// 처리 결과 메시지 담기.
 				if(result == 1) {
 					request.getSession().setAttribute("msg", "삭제가 되었습니다.");
 					return "redirect:list.do";
 				} else {
 					request.getSession().setAttribute("msg", "삭제에 실패하였습니다. 정보를 확인해주세요.");
-					return "redirect:view.do?no=" + vo.getNo() + "&inc=0";
+					return "redirect:view.do?no=" + no + "&inc=0";
 				}
 			default:
 				// 잘못된 메뉴 처리

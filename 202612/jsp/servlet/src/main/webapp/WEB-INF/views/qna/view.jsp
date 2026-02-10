@@ -14,7 +14,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 <style type="text/css">
-#deleteDiv{
+#deleteDiv, #answerDiv{
 	display: none;
 }
 </style>
@@ -27,15 +27,14 @@
 	 // alert("jQuery 영역이 실행됐다.~~~"); // 자바 스크립트의 팝업 열기
 	 $("#deleteBtn").click(function(){
 		// alert("삭제 버튼 클릭");
-		// 입력된 비밀번호 삭제
-		$("#pw").val(""); //jQuery val() - getter, val(data) - setter
-		// disply 속성에서 보이게 show(), 안보이게 hide(), 보이면 안보이게 안보이면 보이게 toggle()
-		$("#deleteDiv").toggle();
+		if(confirm("정말 삭제하시겠습니까?")) location="delete.do?no=${vo.no}";
 	 });
 	 
-	 $("#answerBtn").click(function(){
-		 alert("답변 버튼 눌려짐.");
+	 $("#answerBtn, .closeBtn").click(function(){
+		 // alert("답변 버튼 눌려짐.");
+		 $("#answerDiv").toggle();
 	 });
+	 
  });
 </script>
 </head>
@@ -81,23 +80,9 @@
 	<a id="deleteBtn" class="btn btn-danger">삭제</a>
 	<a href="list.do" class="btn btn-warning">리스트</a>
 	
-	<!-- 삭제를 위한 비밀번호 입력 div -->
-	<div id="deleteDiv">
-		<form action="delete.do" method="post">
-			<!-- 글번호는 자동으로 넘어가게한다. 안보이게(사용자가 입력할 수 없다) 세팅해 준다. -->
-			<input type="hidden" name="no" value="${param.no }">
-		  <div class="mb-3">
-		    <label for="pw" class="form-label">본인 확인 비밀번호 입력</label>
-		    <input type="password" class="form-control" id="pw" placeholder="비밀번호를 입력하세요."
-		     name="pw" required>
-		  </div>
-		  <!-- button tag의 기본 타입은 submit 입니다. 타입에서 button -동작없음. reset - 처음 데이터 -->
-		  <button class="btn btn-danger btn-sm">전송</button>
-		</form>
-	</div>
-	
 	<!-- 답변을 위한 div -->
-	<div id="answerDiv">
+	<div id="answerDiv" class="mt-3">
+		<h3>답변하기</h3>
 		<!-- URL & Header & body(data) 으로 넘기는 방식 : post -- 넘어가는 데이터가 보이지 않는다. -->
 		<form action="answer.do" method="post">
 			<input type="hidden" name="refNo" value="${vo.refNo }">
