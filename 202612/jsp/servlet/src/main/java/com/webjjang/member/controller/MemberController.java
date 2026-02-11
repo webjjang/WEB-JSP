@@ -56,14 +56,24 @@ public class MemberController implements Controller {
 				if( loginVO == null) throw new Exception("회원 정보를 확인하시고 다시 실행해 보세요.");
 				// 로그인 처리 - vo가 null이 아니면 특별한 위치(session)에 저장할 장소에 가져온 데이터를 저장한다.
 				session.setAttribute("login", loginVO);;// 로그인 처리를 한다.
-				// 최신 접속일을 변경한다.
-				Execute.execute(new MemberChangeConDateService(), loginVO.getId());
+				// 최신 접속일을 변경한다. - 외부 URI 없음. -> 내부 URI 만든다.
+				Execute.execute(Init.getService("/member/changeCon.do"), loginVO.getId());
 				
 				// 처리 결과 메시지 담기.
 				session.setAttribute("msg", "로그인이 되었습니다.");
 				
 				// 로그인 처리가 정상으로 된 경우 main으로 보낸다.(임시로 일반 게시판 리스트로 보낸다.)
 				return "redirect:/board/list.do";
+				
+			case "/member/logout.do": // 로그아웃 처리
+				session.removeAttribute("login"); // 로그인 정보를 지우면 로그 아웃이 된다.
+				
+				// 처리 결과 메시지 담기.
+				session.setAttribute("msg", "로그아웃 되었습니다.");		
+				
+				// 로그인 처리가 정상으로 된 경우 main으로 보낸다.(임시로 일반 게시판 리스트로 보낸다.)
+				return "redirect:/board/list.do";
+				
 			case "2":
 				if(!Login.isLogin()) { // 로그인을 하지 않은 경우 회원가입을 진행합니다.
 					//2. 회원가입
