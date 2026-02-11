@@ -15,6 +15,7 @@ import com.webjjang.main.service.Service;
 import com.webjjang.member.controller.MemberController;
 import com.webjjang.member.dao.MemberDAO;
 import com.webjjang.member.service.LoginService;
+import com.webjjang.member.service.MemberChangeConDateService;
 import com.webjjang.qna.controller.QnaController;
 import com.webjjang.qna.dao.QnaDAO;
 import com.webjjang.qna.service.QnaAnswerService;
@@ -97,10 +98,13 @@ public class Init extends HttpServlet {
 		controllerMap.put("/member", new MemberController());
 		// -- Service 저장 - uri로 저장
 		serviceMap.put("/member/login.do", new LoginService());
+		// 최근 접속일 변경 - URI 없음. 내부 URI - /member/changeCon.do
+		serviceMap.put("/member/changeCon.do", new MemberChangeConDateService());
 		// -- DAO 저장 - 변수 이름
 		daoMap.put("memberDAO", new MemberDAO());
 		// 조립 service에 dao 넣기 - service를 가져온다. setter를 이용해서 가져온 dao를 넣는다.
 		serviceMap.get("/member/login.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/changeCon.do").setDAO(daoMap.get("memberDAO"));
 		
 		// *** 질문 답변 생성 / 저장 / 조립
 		// -- Controller 저장
