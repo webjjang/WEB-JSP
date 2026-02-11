@@ -3,9 +3,10 @@ package com.webjjang.member.vo;
 public class Login {
 
 	// 어디서나 누구나 접근 가능한 변수 선언 - Login을 생성하지 않고 바로 사용
+	// 웹에서는 java static 변수를 사용하지 않고 session 에 저장하거나 쿠키를 이용한다.
 	private static LoginVO loginVO = null;
 	
-	// loginVO에 데이터 넣기를 하기 setter
+	// loginVO에 데이터 넣기를 하기 setter - 가져온 vo를 저장하면 로그인을 했다.
 	public static void setLoginVO(LoginVO loginVO) {
 		Login.loginVO = loginVO;
 	}
