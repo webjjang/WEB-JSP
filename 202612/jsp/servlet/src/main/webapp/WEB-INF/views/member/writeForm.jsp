@@ -11,6 +11,20 @@
  
   <script type="text/javascript">
   $(function(){
+	  
+	  // 데이터 넘기는(submit()) 처리 - form 데이터에 대한 submit
+	  $("#writeForm").submit(function(){
+		 // alert("데이터 전송하기 실행");
+		 
+		 // 비밀번호와 비밀번호 확인 같은 지 확인
+		 if($("#pw").val() != $("#pw2").val()){
+			 alert("비밀번호와 비밀번호 확인이 같지 않습니다. 다시 입력해 주세요.");
+			 $("#pw, #pw2").val("");
+			 $("#pw").focus();
+			 return false;
+		 }
+	  });
+	  
 	  $(".cancelBtn").click(function(){
 		 // alert("취소 버튼 클릭~~~!");
 		 history.back();
@@ -22,7 +36,7 @@
 <body>
 	<h2>회원가입</h2>
 	<!-- URL & Header & body(data) 으로 넘기는 방식 : post -- 넘어가는 데이터가 보이지 않는다. -->
-	<form action="write.do" method="post">
+	<form action="write.do" method="post" id="writeForm">
 	  <div class="mb-3 mt-3">
 	    <label for="id" class="form-label">아이디</label>
 	    <!-- required : 필수, autofocus : 페이지가 열리면 커서를 위치시킨다.
@@ -91,7 +105,15 @@
 	     name="tel" pattern="0\d{1,2}-\d{3,4}-\d{4}">
 	  </div>
 	  
-	  <button type="submit" class="btn btn-primary">등록</button>
+	  <div class="mb-3 mt-3">
+	    <label for="email" class="form-label">이메일</label>
+	    <!-- 숫자나 날짜 같은 크기를 나타내는 데이터인 경우 min 과 max를 선언할 수 있다. -->
+	    <input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요."
+	     name="email" required maxlength="50" 
+	     pattern="[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}"
+	    >
+	  </div>
+	  	  <button type="submit" class="btn btn-primary">등록</button>
 	  <button type="reset" class="btn btn-warning">새로입력</button>
 	  <button type="button" class="cancelBtn btn btn-secondary">취소</button>
 	</form>
