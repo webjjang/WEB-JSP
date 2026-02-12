@@ -74,35 +74,45 @@ public class MemberController implements Controller {
 				// 로그인 처리가 정상으로 된 경우 main으로 보낸다.(임시로 일반 게시판 리스트로 보낸다.)
 				return "redirect:/board/list.do";
 				
-			case "2":
-				if(!Login.isLogin()) { // 로그인을 하지 않은 경우 회원가입을 진행합니다.
-					//2. 회원가입
-					// 객체생성 - 정보 받기.
-					MemberVO vo = new MemberVO();
-					vo.setId(In.getStr("아이디"));
-					vo.setPw(In.getStr("비밀번호"));
-					vo.setName(In.getStr("이름"));
-					vo.setGender(In.getStr("성별"));
-					vo.setBirth(In.getStr("생년월일"));
-					vo.setTel(In.getStr("연락처"));
-					vo.setEmail(In.getStr("이메일"));
-					Execute.execute(new MemberWriteService(), vo);
-					System.out.println("*****************************************");
-					System.out.println(" 축하드립니다. 회원가입이 되셨습니다. 로그인하세요.");
-					System.out.println("*****************************************\n");
-				} else { // 로그인을 한 경우 내 정보보기 진행
-					// 2. 내 정보 보기
-					//  Longin에서 id를 가져와서 정보를 가져오다.
-					MemberVO vo = (MemberVO) Execute.execute(new MemberViewService(), Login.getId());
-					MemberPrint.print(vo, 1);
-				}
-				break;
+			case "/member/writeForm.do":
+				// "/WEB-INF/views/" + member/writeForm + ".jsp"
+				return "member/writeForm";
+				
+			case "/member/write.do":
+				//2. 회원가입
+				// 객체생성 - 정보 받기.
+				MemberVO vo = new MemberVO();
+				vo.setId(request.getParameter("id"));
+				vo.setPw(request.getParameter("pw"));
+				vo.setName(request.getParameter("name"));
+				vo.setGender(request.getParameter("gender"));
+				vo.setBirth(request.getParameter("birth"));
+				vo.setTel(request.getParameter("tel"));
+				vo.setEmail(request.getParameter("email"));
+				Execute.execute(Init.getService(uri), vo);
+
+				// 자동 로그인 시키기
+				loginVO = new LoginVO();
+				loginVO.setId(vo.getId());
+				loginVO.setName(vo.getName());
+				loginVO.setGradeNo(1);
+				loginVO.setGradeName("일반회원");
+				
+				// 로그인 처리
+				session.setAttribute("login", loginVO);
+				
+				// 처리 결과 메시지 담기.
+				session.setAttribute("msg", "축하드립니다. 회원가입이 되셨습니다. 자동 로그인되셨습니다.");		
+				
+				// 로그인 처리가 정상으로 된 경우 main으로 보낸다.(임시로 일반 게시판 리스트로 보낸다.)
+				return "redirect:/board/list.do";
+				
 			case "3":
 				if(!Login.isLogin()) { // 로그인을 하지 않은 경우 회원가입을 진행합니다.
 					// 3. 아이디 찾기
 					System.out.println("*** 아이디를 찾기 위해서 회원의 정보가 필요합니다. ***");
 					// 객체생성 - 정보 받기.
-					MemberVO vo = new MemberVO();
+					vo = new MemberVO();
 					vo.setName(In.getStr("이름"));
 					vo.setEmail(In.getStr("이메일"));
 					String id = (String) Execute.execute(new MemberSearchIdService(), vo);
@@ -112,7 +122,7 @@ public class MemberController implements Controller {
 				} else { // 로그인을 한 경우 비밀번호 변경 진행
 					// 3. 비밀번호 변경
 					System.out.println("*** 비밀번호 세팅 진행 ***");
-					MemberVO vo = new MemberVO();
+					vo = new MemberVO();
 					vo.setId(Login.getId());
 					vo.setPw(In.getStr("현재 비밀번호"));
 					vo.setNewPw(In.getStr("새로운 비밀번호"));
@@ -126,7 +136,7 @@ public class MemberController implements Controller {
 					// 4. 비밀번호 찾기
 					System.out.println("*** 비밀번호 찾기 위해서 회원의 정보가 필요합니다. ***");
 					// 객체생성 - 정보 받기.
-					MemberVO vo = new MemberVO();
+					vo = new MemberVO();
 					vo.setId(In.getStr("아이디"));
 					vo.setName(In.getStr("이름"));
 					vo.setBirth(In.getStr("생년월일(XXXX-XX-XX)"));
@@ -175,7 +185,7 @@ public class MemberController implements Controller {
 				break;
 			case "7": // 관리자 - 회원 정보보기
 				if(Login.isAdmin()) {
-					MemberVO vo 
+					vo 
 					= (MemberVO) Execute.execute(new MemberViewService(), In.getStr("정보를 보기의 아이디"));
 					MemberPrint.print(vo, 0);
 				} else {
@@ -186,7 +196,7 @@ public class MemberController implements Controller {
 			case "8": // 관리자 - 회원 상태 변경
 				// 상태 변경할 아이디와 상태를 입력 받는다.
 				if(Login.isAdmin()) {
-					MemberVO vo = new MemberVO();
+					vo = new MemberVO();
 					vo.setId(In.getStr("아이디"));
 					// 입력한 아이디가 로그인한 관리자의 아이디와 같으면 변경 불가능 출력하고 빠져나간다.
 					if(vo.getId().equals(Login.getId())) {
@@ -206,7 +216,7 @@ public class MemberController implements Controller {
 				break;
 			case "9": // 관리자 - 회원 등급변경
 				if(Login.isAdmin()) {
-					MemberVO vo = new MemberVO();
+					vo = new MemberVO();
 					vo.setId(In.getStr("아이디"));
 					// 입력한 아이디가 로그인한 관리자의 아이디와 같으면 변경 불가능 출력하고 빠져나간다.
 					if(vo.getId().equals(Login.getId())) {
