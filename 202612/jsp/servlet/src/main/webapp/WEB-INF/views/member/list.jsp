@@ -79,7 +79,6 @@
 		</c:if>
 		</tbody>
 	</table>
-	<a href="writeForm.do" class="btn btn-primary">글등록</a>
 	<a href="list.do" class="btn btn-success">새로고침</a>
 </body>
 </html>
