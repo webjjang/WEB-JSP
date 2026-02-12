@@ -40,6 +40,10 @@ public class MemberController implements Controller {
 			// 1. 회원관리 메뉴 입력
 			String uri = request.getServletPath();
 			HttpSession session = request.getSession();
+			// 로그인한 아이디 꺼내기
+			LoginVO loginVO = (LoginVO)session.getAttribute("login");
+			String loginId = null;
+			if(loginVO != null) loginId= loginVO.getId();
 			
 			// 2. 메뉴 처리
 			switch (uri) {
@@ -52,7 +56,7 @@ public class MemberController implements Controller {
 				userVO.setId(request.getParameter("id"));
 				userVO.setPw(request.getParameter("pw"));
 				// DB에서 데이터를 가져오는 것 실행
-				LoginVO loginVO = (LoginVO) Execute.execute(Init.getService(uri), userVO);
+				loginVO = (LoginVO) Execute.execute(Init.getService(uri), userVO);
 				if( loginVO == null) throw new Exception("회원 정보를 확인하시고 다시 실행해 보세요.");
 				// 로그인 처리 - vo가 null이 아니면 특별한 위치(session)에 저장할 장소에 가져온 데이터를 저장한다.
 				session.setAttribute("login", loginVO);;// 로그인 처리를 한다.
@@ -185,27 +189,29 @@ public class MemberController implements Controller {
 					Main.invalidMenuPrint();
 				}
 				break;
-			case "8": // 관리자 - 회원 상태 변경
+			case "/member/changeStatus.do": // 관리자 - 회원 상태 변경
 				// 상태 변경할 아이디와 상태를 입력 받는다.
-				if(Login.isAdmin()) {
-					vo = new MemberVO();
-					vo.setId(In.getStr("아이디"));
-					// 입력한 아이디가 로그인한 관리자의 아이디와 같으면 변경 불가능 출력하고 빠져나간다.
-					if(vo.getId().equals(Login.getId())) {
-						System.out.println("** 로그인한 관리자의 상태는 변경할 수 없습니다. **\n");
-						break;
-					}
-					vo.setStatus(In.getStr("상태(정상/탈퇴/강퇴/휴면)"));
-					Integer result = (Integer) Execute.execute(new MemberChangeStatueService(), vo);
-					if(result == 1)
-						System.out.println("** 아이디 " + vo.getId() + "의 상태가 " + vo.getStatus()
-						+ "(으)로 변경되었습니다. **\n");
-					else System.out.println("** 상태 변경에 실패하였습니다. **\n");
-				} else {
-					// 잘못된 메뉴 처리
-					Main.invalidMenuPrint();
+				vo = new MemberVO();
+				// 아이디 받기
+				vo.setId(request.getParameter("id"));
+				// 입력한 아이디가 로그인한 관리자의 아이디와 같으면 변경 불가능 출력하고 빠져나간다.
+				// 로그인한 id를 꺼내는 것은 맨 위에 처리했다.
+				if(vo.getId().equals(loginId)) {
+					// 변경 불가 메시지 처리
+					session.setAttribute("msg", "로그인한 관리자의 상태는 변경할 수 없습니다.");
+					return "redirect:list.do";
 				}
-				break;
+				// 상태 받기
+				vo.setStatus(request.getParameter("status"));
+				Integer result = (Integer) Execute.execute(Init.getService(uri), vo);
+				if(result == 1) {
+					session.setAttribute("msg", "아이디 " + vo.getId() + "의 상태가 " 
+							+ vo.getStatus() + "	(으)로 변경되었습니다.");
+				} else {
+					session.setAttribute("msg", "상태 변경에 실패하였습니다.");
+				}
+				// 처리가 다 끝나면 자신 페이지인 list 로 돌아간다.
+				return "redirect:list.do";
 			case "9": // 관리자 - 회원 등급변경
 				if(Login.isAdmin()) {
 					vo = new MemberVO();
@@ -216,7 +222,7 @@ public class MemberController implements Controller {
 						break;
 					}
 					vo.setGradeNo(Integer.parseInt(In.getStr("1. 일반회원 / 9. 관리자")));
-					Integer result = (Integer) Execute.execute(new MemberChangeGradeService(), vo);
+					result = (Integer) Execute.execute(new MemberChangeGradeService(), vo);
 					if(result == 1)
 						System.out.println("** 아이디 " + vo.getId() + "의 등급을 " 
 						+ ((vo.getGradeNo() == 1)?"일반회원":"관리자")
