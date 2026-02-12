@@ -17,7 +17,7 @@
 }
 
 /* 상태 변경 버튼, 등급 변경 버튼 */
-.changeStatusBtn, .changeGradeBtn{
+.changeStatusBtn, .changeGradeNoBtn{
 	display: none;
 }
 </style>
@@ -53,7 +53,7 @@
 	 });
 	 
 	 // 상태 값이 변경되면 상태 변경 버튼이 나타나야 한다.
-	 $(".status").on("change", function(){
+	 $(".status, .gradeNo").on("change", function(){
 		 // alert("상태 값이 변경되었습니다.");
 		 // next() - 다음에 나오는 요소 객체(태그)
 		 // prev() - 앞에 있는 요소 객체(태그)
@@ -73,6 +73,19 @@
 		 
 		 // alert("id = " + id + ", status = " + status);
 		 location = "changeStatus.do?id=" + id + "&status=" + status;
+	 });
+	 
+	 // 나타난 등급 수정 버튼을 클릭했을 때 처리
+	 $(".changeGradeNoBtn").on("click", function(){
+		 // alert("등급 수정 버튼 클릭함. ---");
+		 // id와 상태 데이터 찾아와야한다.
+		 // closest() - 조상 객체 중에서 제일 처음 만나는 요소 객체(태그)
+		 // text() - 태그 안에 글자 가져오기, text("text") - 태그 안에 글자 넣기
+		 let id = $(this).closest(".dataRow").find(".id").text();
+		 let gradeNo = $(this).closest(".dataRow").find(".gradeNo").val();
+		 
+		 // alert("id = " + id + ", gradeNo = " + gradeNo);
+		 location = "changeGrade.do?id=" + id + "&gradeNo=" + gradeNo;
 	 });
  });
 </script>
@@ -122,7 +135,19 @@
 							 style="width: 100px;">수정</button>
 						</div>
 					</td>
-					<td>${vo.gradeName }</td>
+					<td>
+						<div class="d-inline-flex">
+							<!-- select tag - 풀다운 메뉴. option tag가 나타남.
+							     option tag의 보여주는 데이터와 값이 다른 경우는 안에 value 속성 안에 값을 넣어둔다.
+							     DB에 가져온 데이터 적용 - option tag안에 selected라는 속성을 붙여 준다. -->
+							<select class="form-select noMove gradeNo">
+							  <option value="1" ${(vo.gradeNo == 1)?"selected":"" }>일반회원</option>
+							  <option value="9" ${(vo.gradeNo == 9)?"selected":"" }>관리자</option>
+							</select>
+							<button class="btn btn-warning noMove changeGradeNoBtn"
+							 style="width: 100px;">수정</button>
+						</div>
+					</td>
 				</tr>
 			</c:forEach>
 		</c:if>
