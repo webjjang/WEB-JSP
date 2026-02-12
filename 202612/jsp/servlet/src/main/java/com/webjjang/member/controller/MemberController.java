@@ -212,27 +212,28 @@ public class MemberController implements Controller {
 				}
 				// 처리가 다 끝나면 자신 페이지인 list 로 돌아간다.
 				return "redirect:list.do";
-			case "9": // 관리자 - 회원 등급변경
-				if(Login.isAdmin()) {
-					vo = new MemberVO();
-					vo.setId(In.getStr("아이디"));
-					// 입력한 아이디가 로그인한 관리자의 아이디와 같으면 변경 불가능 출력하고 빠져나간다.
-					if(vo.getId().equals(Login.getId())) {
-						System.out.println("** 로그인한 관리자의 등급을 변경할 수 없습니다. **\n");
-						break;
-					}
-					vo.setGradeNo(Integer.parseInt(In.getStr("1. 일반회원 / 9. 관리자")));
-					result = (Integer) Execute.execute(new MemberChangeGradeService(), vo);
-					if(result == 1)
-						System.out.println("** 아이디 " + vo.getId() + "의 등급을 " 
-						+ ((vo.getGradeNo() == 1)?"일반회원":"관리자")
-						+ "(으)로 변경되었습니다. **\n");
-					else System.out.println("** 등급 변경에 실패하였습니다. **\n");
-				} else {
-					// 잘못된 메뉴 처리
-					Main.invalidMenuPrint();
+			case "/member/changeGrade.do": // 관리자 - 회원 등급변경
+				vo = new MemberVO();
+				// 아이디 받기
+				vo.setId(request.getParameter("id"));
+				// 입력한 아이디가 로그인한 관리자의 아이디와 같으면 변경 불가능 출력하고 빠져나간다.
+				// 로그인한 id를 꺼내는 것은 맨 위에 처리했다.
+				if(vo.getId().equals(loginId)) {
+					// 변경 불가 메시지 처리
+					session.setAttribute("msg", "로그인한 관리자의 등급을 변경할 수 없습니다.");
+					return "redirect:list.do";
 				}
-				break;
+				// 등급 번호 받기
+				vo.setGradeNo(Integer.parseInt(request.getParameter("gradeNo")));
+				result = (Integer) Execute.execute(Init.getService(uri), vo);
+				if(result == 1) {
+					session.setAttribute("msg", "아이디 " + vo.getId() + "의 등급이 " 
+							+ vo.getGradeNo() + "로 변경되었습니다.");
+				} else {
+					session.setAttribute("msg", "등급 변경에 실패하였습니다.");
+				}
+				// 처리가 다 끝나면 자신 페이지인 list 로 돌아간다.
+				return "redirect:list.do";
 			case "0":
 				
 				return null;
