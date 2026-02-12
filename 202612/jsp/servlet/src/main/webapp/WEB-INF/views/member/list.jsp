@@ -15,6 +15,11 @@
 .dataRow:hover{
 	cursor: pointer; /* 손가락 */
 }
+
+/* 상태 변경 버튼, 등급 변경 버튼 */
+.changeStatusBtn, .changeGradeBtn{
+	display: none;
+}
 </style>
 
 <!-- 동작을 시키는 JS : 위치와 상관없이 코딩할 수 있다. -->
@@ -38,6 +43,36 @@
 		 $(this).addClass("table-success");
 	 }).mouseout(function(){
 		 $(this).removeClass("table-success");
+	 });
+	 
+	 $(".dataRow").on("click", ".noMove", function(event){
+		 // 페이지 이동을 막는다.
+		 // event.preventDefault();
+		 // alert("페이지 이동을 막음...");
+		 return false;
+	 });
+	 
+	 // 상태 값이 변경되면 상태 변경 버튼이 나타나야 한다.
+	 $(".status").on("change", function(){
+		 // alert("상태 값이 변경되었습니다.");
+		 // next() - 다음에 나오는 요소 객체(태그)
+		 // prev() - 앞에 있는 요소 객체(태그)
+		 // parent() - 부모의 해당되는 태그
+		 // closest() - 조상 객체 중에서 제일 처음 만나는 요소 객체(태그)
+		 $(this).next().show();
+	 });
+	 
+	 // 나타난 상태 수정 버튼을 클릭했을 때 처리
+	 $(".changeStatusBtn").on("click", function(){
+		 // alert("상태 수정 버튼 클릭함. ---");
+		 // id와 상태 데이터 찾아와야한다.
+		 // closest() - 조상 객체 중에서 제일 처음 만나는 요소 객체(태그)
+		 // text() - 태그 안에 글자 가져오기, text("text") - 태그 안에 글자 넣기
+		 let id = $(this).closest(".dataRow").find(".id").text();
+		 let status = $(this).closest(".dataRow").find(".status").val();
+		 
+		 // alert("id = " + id + ", status = " + status);
+		 location = "changeStatus.do?id=" + id + "&status=" + status;
 	 });
  });
 </script>
@@ -72,7 +107,21 @@
 					<td>${vo.birth }</td>
 					<td>${vo.tel }</td>
 					<td>${vo.email }</td>
-					<td>${vo.status }</td>
+					<td>
+						<div class="d-inline-flex">
+							<!-- select tag - 풀다운 메뉴. option tag가 나타남.
+							     option tag의 보여주는 데이터와 값이 다른 경우는 안에 value 속성 안에 값을 넣어둔다.
+							     DB에 가져온 데이터 적용 - option tag안에 selected라는 속성을 붙여 준다. -->
+							<select class="form-select noMove status">
+							  <option ${(vo.status == "정상")?"selected":"" }>정상</option>
+							  <option ${(vo.status == "탈퇴")?"selected":"" }>탈퇴</option>
+							  <option ${(vo.status == "강퇴")?"selected":"" }>강퇴</option>
+							  <option ${(vo.status == "휴면")?"selected":"" }>휴면</option>
+							</select>
+							<button class="btn btn-warning noMove changeStatusBtn"
+							 style="width: 100px;">수정</button>
+						</div>
+					</td>
 					<td>${vo.gradeName }</td>
 				</tr>
 			</c:forEach>
