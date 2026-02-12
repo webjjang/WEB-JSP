@@ -171,18 +171,10 @@ public class MemberController implements Controller {
 			case "5": // 회원 탈퇴 진행 - 비밀번호가 맞으면 회원 탈퇴 진행(정상 -> 탈퇴 변경)
 				// 아이디 - 로그인 정보 자동으로 가져온다. 비밀번호 - 사용자에게 받는다.
 				break;
-			case "6": // 관리자 - 회원리스트
-				if(Login.isAdmin()) { // 관리자인 경우 처리
-					System.out.println("5. 회원리스트 처리");
-					// DB 에서 데이터 가져오기
-					List<MemberVO> list = (List<MemberVO>) Execute.execute(new MemberListService(), null);
-					// 데이터 출력하기
-					MemberPrint.print(list);
-				} else {
-					// 잘못된 메뉴 처리
-					Main.invalidMenuPrint();
-				}
-				break;
+			case "/member/list.do": // 관리자 - 회원리스트
+				// DB 에서 데이터 가져오기 -> request에 담는다.
+				request.setAttribute("list", Execute.execute(Init.getService(uri), null));
+				return "member/list";
 			case "7": // 관리자 - 회원 정보보기
 				if(Login.isAdmin()) {
 					vo 
