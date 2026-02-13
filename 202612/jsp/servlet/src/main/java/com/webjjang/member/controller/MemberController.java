@@ -234,24 +234,24 @@ public class MemberController implements Controller {
 				}
 				// 처리가 다 끝나면 자신 페이지인 list 로 돌아간다.
 				return "redirect:list.do";
-			case "0":
-				
-				return null;
 
 			default:
-				// 잘못된 메뉴 처리
-				Main.invalidMenuPrint();
-				break;
+				// 잘못된 URI 처리
+				request.setAttribute("url", request.getRequestURL());
+				// /WEB-INF/views/ + error/noPage + .jsp
+				return "error/noPage";
 			} // 메뉴 처리 switch 문의 끝
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			// 사용자를 위한 예외 코드 작성
-			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-			System.out.println(" 회원 관리 처리 중 오류가 발생되었습니다.");
-			System.out.println(" 오류 : " + e.getMessage());
-			System.out.println(" 다시 한번 실행해 주시고 오류가 계속되면 오류 게시판에 남겨 주세요.");
-			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
+			e.printStackTrace();
+			e.getStackTrace();
+			// 잘못된 예외 처리 - 사용자에게 보여주기
+			request.setAttribute("url", request.getRequestURL());
+			request.setAttribute("moduleName", "회원 관리");
+			request.setAttribute("e", e);
+			// /WEB-INF/views/ + error/err_500 + .jsp
+			return "error/err_500";
 		} // try ~ catch의 끝
 		return null;
 			

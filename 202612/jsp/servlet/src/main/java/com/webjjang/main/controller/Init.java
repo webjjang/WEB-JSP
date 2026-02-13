@@ -16,6 +16,9 @@ import com.webjjang.member.controller.MemberController;
 import com.webjjang.member.dao.MemberDAO;
 import com.webjjang.member.service.LoginService;
 import com.webjjang.member.service.MemberChangeConDateService;
+import com.webjjang.member.service.MemberChangeGradeService;
+import com.webjjang.member.service.MemberChangeStatueService;
+import com.webjjang.member.service.MemberListService;
 import com.webjjang.member.service.MemberWriteService;
 import com.webjjang.qna.controller.QnaController;
 import com.webjjang.qna.dao.QnaDAO;
@@ -102,12 +105,18 @@ public class Init extends HttpServlet {
 		// 최근 접속일 변경 - 외부 URI 없음. 내부 URI - /member/changeCon.do
 		serviceMap.put("/member/changeCon.do", new MemberChangeConDateService());
 		serviceMap.put("/member/write.do", new MemberWriteService());
+		serviceMap.put("/member/list.do", new MemberListService());
+		serviceMap.put("/member/changeStatus.do", new MemberChangeStatueService());
+		serviceMap.put("/member/changeGrade.do", new MemberChangeGradeService());
 		// -- DAO 저장 - 변수 이름
 		daoMap.put("memberDAO", new MemberDAO());
 		// 조립 service에 dao 넣기 - service를 가져온다. setter를 이용해서 가져온 dao를 넣는다.
 		serviceMap.get("/member/login.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/changeCon.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/write.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/list.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/changeStatus.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/changeGrade.do").setDAO(daoMap.get("memberDAO"));
 		
 		// *** 질문 답변 생성 / 저장 / 조립
 		// -- Controller 저장

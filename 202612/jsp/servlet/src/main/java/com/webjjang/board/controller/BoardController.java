@@ -28,6 +28,8 @@ public class BoardController implements Controller{
 	// PL이 메서드 이름을 정한다.
 	// String 리턴 타입의 데이터는 forward 시킬 JSP의 정보이거나 redirect시킬 정보이다. 
 	public String execute(HttpServletRequest request) {
+		// 잘못된 URI 처리 / 오류를 위한 URL 저장
+		request.setAttribute("url", request.getRequestURL());
 		try { // 정상처리
 			// 요청 uri에 따라서 처리된다.
 			// list - /board/list.do
@@ -137,23 +139,20 @@ public class BoardController implements Controller{
 					return "redirect:view.do?no=" + vo.getNo() + "&inc=0";
 				}
 			default:
-				// 잘못된 메뉴 처리
-				Main.invalidMenuPrint();
-				break;
-			} // switch ~ case 라벨: ~ default 의 끝
-			System.out.println(); // 화면을 구분하는 빈줄 출력
+				// /WEB-INF/views/ + error/noPage + .jsp
+				return "error/noPage";
+			} // switch ~ case 의 끝
 		} // try 정상처리 의 끝
 		catch (Exception e) { // 예외 처리
-			// e.printStackTrace(); // 개발자를 위한 예외 상세 출력
-			// 사용자를 위한 예외 코드 작성
-			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-			System.out.println(" 일반 게시판 처리 중 오류가 발생되었습니다.");
-			System.out.println(" 오류 : " + e.getMessage());
-			System.out.println(" 다시 한번 실행해 주시고 오류가 계속되면 오류 게시판에 남겨 주세요.");
-			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
+			// 개발자를 위한 코드
+			e.printStackTrace();
+			// 잘못된 예외 처리 - 사용자에게 보여주기
+			request.setAttribute("moduleName", "일반 게시판");
+			request.setAttribute("e", e);
+			// /WEB-INF/views/ + error/err_500 + .jsp
+			return "error/err_500";
 		} // catch 의 끝
-		return null;
-		
+		// return null;
 		
 	} // execute()의 끝
 	

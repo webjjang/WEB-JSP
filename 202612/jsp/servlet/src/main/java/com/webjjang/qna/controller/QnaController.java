@@ -9,7 +9,6 @@ import com.webjjang.main.service.Execute;
 import jakarta.servlet.http.HttpServletRequest;
 
 // Controller
-//  - 메뉴 출력 -> 메뉴 입력 -> 메뉴 처리 : 무한 반복
 //  - 예외 처리 - 위의 정상 처리를 try로 묶는다. catch로 예외 처리를 한다.
 //  - 모듈(질문답변)을 처리한다.
 //  - 데이터 수집 : DB에서 가져온다. 사용자에게 입력 받는다.
@@ -147,22 +146,22 @@ public class QnaController implements Controller{
 					return "redirect:view.do?no=" + no + "&inc=0";
 				}
 			default:
-				// 잘못된 메뉴 처리
-				Main.invalidMenuPrint();
-				break;
+				// 잘못된 URI 처리
+				request.setAttribute("url", request.getRequestURL());
+				// /WEB-INF/views/ + error/noPage + .jsp
+				return "error/noPage";
 			} // switch ~ case 라벨: ~ default 의 끝
-			System.out.println(); // 화면을 구분하는 빈줄 출력
 		} // try 정상처리 의 끝
 		catch (Exception e) { // 예외 처리
 			e.printStackTrace(); // 개발자를 위한 예외 상세 출력
-			// 사용자를 위한 예외 코드 작성
-			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-			System.out.println(" 일반 게시판 처리 중 오류가 발생되었습니다.");
-			System.out.println(" 오류 : " + e.getMessage());
-			System.out.println(" 다시 한번 실행해 주시고 오류가 계속되면 오류 게시판에 남겨 주세요.");
-			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
+			// 잘못된 예외 처리 - 사용자에게 보여주기
+			request.setAttribute("url", request.getRequestURL());
+			request.setAttribute("moduleName", "질문 답변");
+			request.setAttribute("e", e);
+			// /WEB-INF/views/ + error/err_500 + .jsp
+			return "error/err_500";
 		} // catch 의 끝
-		return null;
+		// return null;
 		
 		
 	} // execute()의 끝

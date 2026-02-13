@@ -28,7 +28,7 @@
 <!--  include 디렉티브 태그 : 소스를 복붙해서 클래스를 한개로 만들어서 컴파일 한다. -->
 <%@ include file="../inc/mainMenu.jsp" %>
 <!-- 메인 메뉴 부분 끝 ------------------------------------ -->
-<div class="container-fluid" style="margin-top:80px">
+<div class="container-fluid" style="margin-top:80px; margin-bottom: 80px;">
 	<div class="container mt-3 mb-3">
 		<!-- JSP에서 작성되 body 태그 -->
 		<decorator:body/>
