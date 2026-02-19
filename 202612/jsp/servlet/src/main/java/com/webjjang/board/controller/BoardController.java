@@ -1,19 +1,12 @@
 package com.webjjang.board.controller;
 
-import java.util.List;
-
-import com.webjjang.board.service.BoardDeleteService;
-import com.webjjang.board.service.BoardListService;
-import com.webjjang.board.service.BoardUpdateService;
-import com.webjjang.board.service.BoardViewService;
-import com.webjjang.board.service.BoardWriteService;
 import com.webjjang.board.vo.BoardVO;
 import com.webjjang.main.controller.Controller;
 import com.webjjang.main.controller.Init;
-import com.webjjang.main.controller.Main;
 import com.webjjang.main.service.Execute;
 import com.webjjang.util.io.BoardPrint;
 import com.webjjang.util.io.In;
+import com.webjjang.util.page.PageObject;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -44,10 +37,18 @@ public class BoardController implements Controller{
 			switch (uri) {
 			case "/board/list.do":
 				// System.out.println("일반게시판 리스트 처리");
+				// 페이지 처리를 위한 객체
+				// getInstance() - 객체를 생성해서 넘겨주세요.
+				// - 1. PageObject를 생성한다. 2. request에서 page / 검색 정보를 받아서 세팅한다.
+				PageObject pageObject = PageObject.getInstance(request);
+				
 				// 생성된 Service를 가져와서 실행 -> Execute가 실행하면 로그를 남긴다.
 				// DB에서 데이터 수집을 해온다.
 				// 사용자에게 제공한다.
-				request.setAttribute("list", Execute.execute(Init.getService(uri), null));
+				request.setAttribute("list", Execute.execute(Init.getService(uri), pageObject));
+				// 처리된 후의 pageObject 데이터 확인
+				System.out.println("BoardController.execuete().pageObject - " + pageObject);
+				request.setAttribute("pageObject", pageObject);
 				// jsp의 위치 정보 "/WEB-INF/views/" + "board/list" + ".jsp"
 				return "board/list";
 			case "/board/view.do":

@@ -6,6 +6,7 @@ import java.util.List;
 import com.webjjang.board.vo.BoardVO;
 import com.webjjang.main.dao.DAO;
 import com.webjjang.util.db.DB;
+import com.webjjang.util.page.PageObject;
 
 //Main - BoardController - Board***Service - (BoardDAO) // BoardVO
 // DAO - Data Access Object : DB처리 프로그램
@@ -16,7 +17,7 @@ public class BoardDAO extends DAO{
 	// DB 연결 정보 -> com.webjjang.util.db.DB 이동
 	
 	// 1. 일반 게시판 리스트
-	public List<BoardVO> list() throws Exception{
+	public List<BoardVO> list(PageObject pageObject) throws Exception{
 		
 		// System.out.println("BoardDAO.list()----------------------");
 		
@@ -27,11 +28,21 @@ public class BoardDAO extends DAO{
 		con = DB.getConnection();
 		
 		// 3. 실행할 쿼리 작성
+		// 3-1. 원본 데이터 정렬해서 가져오기
 		String sql = "select no, title, writer, to_char(writeDate, 'yyyy-mm-dd') writeDate, "
 				+ " hit from board order by no desc";
+		// 3-2. 순서 번호를 붙인다.
+		sql = "select rownum rnum, no, title, writer, writeDate, hit " 
+			+ " from(" + sql + ")";
+		// 3-3. page에 맞는 데이터만 가져온다.
+		sql = "select rnum, no, title, writer, writeDate, hit "
+			+ " from(" + sql + ") where rnum between ? and ?";
 		
 		// 4. 실행 객체 & 데이터 세팅
 		pstmt = con.prepareStatement(sql);
+		// 1page의 정보를 하드 코딩했다.
+		pstmt.setLong(1, pageObject.getStartRow());
+		pstmt.setLong(2, pageObject.getEndRow());
 		
 		// 5. 실행 : select :executeQuery() -> rs, insert / update / delete :executeUpdate() -> Integer
 		rs = pstmt.executeQuery();
@@ -57,6 +68,38 @@ public class BoardDAO extends DAO{
 		
 		return list;
 	} // list()의 끝
+	
+	// 1-1. 일반 게시판 글의 개수
+	public Long getTotalRow() throws Exception{
+		
+		// System.out.println("BoardDAO.getTotalRow()----------------------");
+		
+		// 리턴 타입과 동일한 변수 선언 - 결과 저장
+		Long totalRow = 0L;
+		
+		// 1. 드라이버 확인 - static으로 선언된 내용이 자동으로 올라간다.	// 2. 연결 객체 - 정보를 넣고 서버에 다녀온다.
+		con = DB.getConnection();
+		
+		// 3. 실행할 쿼리 작성
+		String sql = "select count(*) from board";
+		
+		// 4. 실행 객체 & 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		
+		// 5. 실행 : select :executeQuery() -> rs, insert / update / delete :executeUpdate() -> Integer
+		rs = pstmt.executeQuery();
+		
+		// 6. DB에서 가져온 데이터 채우기
+		if(rs != null && rs.next()) {
+			// 데이터를 저장한다.
+			totalRow = rs.getLong(1);
+		} // if의 끝
+		
+		// 7. DB 닫기
+		DB.close(con, pstmt, rs);
+		
+		return totalRow;
+	} // getTotalRow()의 끝
 	
 	// 2-0. 조회수 1 증가
 	public Integer increase(Long no) throws Exception{
