@@ -1,19 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="pageNav" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>일반게시판 리스트</title>
-<!-- Bootstrap 라이브러리 등록 --------- -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- jQuery 라이브러리 등록 - 자바스크립트 함수 : jQuery() ==> $() -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
+<!-- Bootstrap / jQuery 라이브러리 등록 : default_decorator.jsp 에 등록됨--------- -->
 
 <style type="text/css">
 /* :hover - 마우스가 오라 갔을 때 CSS. 공백없이 :hover 작성  */
@@ -87,6 +81,9 @@
 		</c:if>
 		</tbody>
 	</table>
+	<div>
+		<pageNav:pageNav listURI="list.do" pageObject="${pageObject }" />
+	</div>
 	<a href="writeForm.do" class="btn btn-primary">글등록</a>
 	<a href="list.do" class="btn btn-success">새로고침</a>
 </div>
