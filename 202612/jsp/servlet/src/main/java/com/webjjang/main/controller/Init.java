@@ -20,6 +20,9 @@ import com.webjjang.member.service.MemberChangeGradeService;
 import com.webjjang.member.service.MemberChangeStatueService;
 import com.webjjang.member.service.MemberListService;
 import com.webjjang.member.service.MemberWriteService;
+import com.webjjang.notice.controller.NoticeController;
+import com.webjjang.notice.dao.NoticeDAO;
+import com.webjjang.notice.service.NoticeListService;
 import com.webjjang.qna.controller.QnaController;
 import com.webjjang.qna.dao.QnaDAO;
 import com.webjjang.qna.service.QnaAnswerService;
@@ -137,6 +140,17 @@ public class Init extends HttpServlet {
 		serviceMap.get("/qna/answer.do").setDAO(daoMap.get("qnaDAO"));
 		serviceMap.get("/qna/update.do").setDAO(daoMap.get("qnaDAO"));
 		serviceMap.get("/qna/delete.do").setDAO(daoMap.get("qnaDAO"));
+		
+		// *** 공지사항 생성 / 저장 / 조립
+		// -- Controller 저장
+		controllerMap.put("/notice", new NoticeController());
+		// -- Service 저장
+		serviceMap.put("/notice/list.do", new NoticeListService());
+		// -- DAO 저장
+		daoMap.put("noticeDAO", new NoticeDAO());
+		// -- service에 dao를 조립한다.
+		serviceMap.get("/notice/list.do").setDAO(daoMap.get("noticeDAO"));
+		
 		
 		System.out.println("Init.init() - 객체 로딩 완료 -----------------------------------");
 	}
