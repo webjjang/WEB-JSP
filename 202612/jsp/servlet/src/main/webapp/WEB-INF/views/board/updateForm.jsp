@@ -30,6 +30,11 @@
 	<h2>일반게시판 글수정</h2>
 	<!-- URL & Header & body(data) 으로 넘기는 방식 : post -- 넘어가는 데이터가 보이지 않는다. -->
 	<form action="update.do" method="post">
+		<!--  페이지 정보를 숨겨서 넘기기 -->
+		<input type="hidden" name="page" value="${param.page }">
+		<input type="hidden" name="perPageNum" value="${param.perPageNum }">
+		<input type="hidden" name="key" value="${param.key }">
+		<input type="hidden" name="word" value="${param.word }">
 	  <div class="mb-3 mt-3">
 	    <label for="no" class="form-label">번호</label>
 	    <input type="text" class="form-control" id="no" 

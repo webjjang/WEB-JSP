@@ -28,6 +28,7 @@
 	<h2>일반게시판 글등록</h2>
 	<!-- URL & Header & body(data) 으로 넘기는 방식 : post -- 넘어가는 데이터가 보이지 않는다. -->
 	<form action="write.do" method="post">
+	<input type="hidden" name="perPageNum" value="${param.perPageNum }">
 	  <div class="mb-3 mt-3">
 	    <label for="title" class="form-label">제목</label>
 	    <input type="text" class="form-control" id="title" placeholder="제목을 입력하세요." name="title"

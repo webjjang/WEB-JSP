@@ -19,7 +19,6 @@
 
 <!-- 동작을 시키는 JS : 위치와 상관없이 코딩할 수 있다. -->
 <script type="text/javascript">
- ${(!empty msg)?"alert('" += msg += "');":""}
  // jQuery :: 아래 HTML이 로딩이 끝나면 실행 줘 - $() 사이에 실행할 function을 넘긴다. body가 다 로딩이 되면 function이 실행됨.
  $(function(){
 	 // alert("jQuery 영역이 실행됐다.~~~"); // 자바 스크립트의 팝업 열기
@@ -34,7 +33,7 @@
 	 	// location 객체 - BOM 객체 중에 하나.
 	 	// location.href = "view.jsp?no=" + no; // location = "url" == location.href = "url"
 	 	// location = "url" : 자동으로 location.href에 들어간다.
-	 	location = "view.do?no=" + no + "&inc=1";
+	 	location = "view.do?no=" + no + "&inc=1&${pageObject.pageQuery}";
 	 }).mouseover(function(){
 		 $(this).addClass("table-success");
 	 }).mouseout(function(){
@@ -46,11 +45,7 @@
 <body>
 
 <!-- 메인 메뉴 부분 ------------------------------------ -->
-<!--  include 디렉티브 태그 : 소스를 복붙해서 클래스를 한개로 만들어서 컴파일 한다. -->
-<%@ include file="../inc/mainMenu.jsp" %>
-<!-- 메인 메뉴 부분 끝 ------------------------------------ -->
 
-<div class="container">
 	<h2>일반게시판 리스트</h2>
 	<table class="table">
 		<thead class="table-dark">
@@ -84,14 +79,7 @@
 	<div>
 		<pageNav:pageNav listURI="list.do" pageObject="${pageObject }" />
 	</div>
-	<a href="writeForm.do" class="btn btn-primary">글등록</a>
+	<a href="writeForm.do?perPageNum=${param.perPageNum }" class="btn btn-primary">글등록</a>
 	<a href="list.do" class="btn btn-success">새로고침</a>
-</div>
-<%-- JSP의 주석 : 표현식으로 가져온 데이터 출력(취소 주석처리) --%>
-<%-- = list --%>
 </body>
 </html>
-<%
-	// 글등록한 결과 메시지 지우기
-	session.removeAttribute("msg");
-%>
