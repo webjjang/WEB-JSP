@@ -85,7 +85,7 @@ public class BoardController implements Controller{
 				// 처리 결과 메시지 담기.
 				request.getSession().setAttribute("msg", "글등록이 되었습니다.");
 				
-				return "redirect:list.do";
+				return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum");
 				
 			case "/board/updateForm.do":
 				// System.out.println("일반게시판 글수정 폼");
@@ -104,6 +104,9 @@ public class BoardController implements Controller{
 			case "/board/update.do":
 				// System.out.println("일반게시판 글수정 처리");
 				// 넘어오는 데이터 수집
+				// 페이지 정보 꺼내서 저장하기
+				pageObject = PageObject.getInstance(request);
+				
 				// 사용자에게 데이터 받기 - 제목, 내용, 작성자, 비밀번호 - vo에 저장한다.
 				//   - BoardVO를 생성 -> 데이터 받기 setter()와 In.getStr()이용.
 				vo = new BoardVO();
@@ -121,7 +124,7 @@ public class BoardController implements Controller{
 				else
 					request.getSession().setAttribute("msg", "수정에 실패하였습니다. 정보를 확인해주세요.");
 				
-				return "redirect:view.do?no=" + vo.getNo() + "&inc=0";
+				return "redirect:view.do?no=" + vo.getNo() + "&inc=0&" + pageObject.getPageQuery();
 				
 			case "/board/delete.do":
 				System.out.println("일반게시판 글삭제 처리");
@@ -134,10 +137,15 @@ public class BoardController implements Controller{
 				// 처리 결과 메시지 담기.
 				if(result == 1) {
 					request.getSession().setAttribute("msg", "삭제가 되었습니다.");
-					return "redirect:list.do";
+					return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum");
 				} else {
 					request.getSession().setAttribute("msg", "삭제에 실패하였습니다. 정보를 확인해주세요.");
-					return "redirect:view.do?no=" + vo.getNo() + "&inc=0";
+					return "redirect:view.do?no=" + vo.getNo() + "&inc=0"
+							+ "&page=" + request.getParameter("page")
+							+ "&perPageNum=" + request.getParameter("perPageNum")
+							+ "&key=" + request.getParameter("key")
+							+ "&word=" + request.getParameter("word")
+							;
 				}
 			default:
 				// /WEB-INF/views/ + error/noPage + .jsp
