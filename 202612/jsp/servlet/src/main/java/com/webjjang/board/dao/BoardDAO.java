@@ -1,5 +1,6 @@
 package com.webjjang.board.dao;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,11 @@ public class BoardDAO extends DAO{
 		// 3. 실행할 쿼리 작성
 		// 3-1. 원본 데이터 정렬해서 가져오기
 		String sql = "select no, title, writer, to_char(writeDate, 'yyyy-mm-dd') writeDate, "
-				+ " hit from board order by no desc";
+				+ " hit from board ";
+		// 검색 처리를 한다. -> getTotalRow()의 검색 처리와 같다. -> 반복이 된다. 메서드를 만든다.
+		sql += search(pageObject);
+		
+		sql += " order by no desc";
 		// 3-2. 순서 번호를 붙인다.
 		sql = "select rownum rnum, no, title, writer, writeDate, hit " 
 			+ " from(" + sql + ")";
@@ -40,9 +45,12 @@ public class BoardDAO extends DAO{
 		
 		// 4. 실행 객체 & 데이터 세팅
 		pstmt = con.prepareStatement(sql);
-		// 1page의 정보를 하드 코딩했다.
-		pstmt.setLong(1, pageObject.getStartRow());
-		pstmt.setLong(2, pageObject.getEndRow());
+		// 순서 번호의 변수 선언해서 사용한다.
+		int idx = 1;
+		//  검색 데이터 세팅을 한다. - ?가 생길 수도 있다.
+		idx = searchDataSet(pstmt, idx, pageObject); // pstmt 데이터를 메서드 안에서 변경면 밖에서 변경된 상태 : 참조형변수 - 주소전달
+		pstmt.setLong(idx++, pageObject.getStartRow());
+		pstmt.setLong(idx++, pageObject.getEndRow());
 		
 		// 5. 실행 : select :executeQuery() -> rs, insert / update / delete :executeUpdate() -> Integer
 		rs = pstmt.executeQuery();
@@ -70,7 +78,7 @@ public class BoardDAO extends DAO{
 	} // list()의 끝
 	
 	// 1-1. 일반 게시판 글의 개수
-	public Long getTotalRow() throws Exception{
+	public Long getTotalRow(PageObject pageObject) throws Exception{
 		
 		// System.out.println("BoardDAO.getTotalRow()----------------------");
 		
@@ -81,10 +89,18 @@ public class BoardDAO extends DAO{
 		con = DB.getConnection();
 		
 		// 3. 실행할 쿼리 작성
-		String sql = "select count(*) from board";
+		String sql = "select count(*) from board ";
+		
+		// 검색 처리를 한다. -> list()의 검색 처리와 같다. -> 반복이 된다. 메서드를 만든다.
+		sql += search(pageObject);
 		
 		// 4. 실행 객체 & 데이터 세팅
 		pstmt = con.prepareStatement(sql);
+		// - 검색 처리를 하면 데이터 세팅이 필요한다. ?가 생긴다.
+		// 순서 번호의 변수 선언해서 사용한다.
+		int idx = 1;
+		// 검색 데이터 세팅을 한다. - ?가 생길 수도 있다. 
+		idx = searchDataSet(pstmt, idx, pageObject); // pstmt 데이터 변경
 		
 		// 5. 실행 : select :executeQuery() -> rs, insert / update / delete :executeUpdate() -> Integer
 		rs = pstmt.executeQuery();
@@ -100,6 +116,55 @@ public class BoardDAO extends DAO{
 		
 		return totalRow;
 	} // getTotalRow()의 끝
+	
+	
+	// 1-2. 검색을 위한 메서드
+	public String search(PageObject pageObject) {
+		String sql = "";
+		
+		String key = pageObject.getKey();
+		String word = pageObject.getWord();
+		
+		//word가 비어있지 않으면 검색을 처리한다.
+		if(word != null && word.length() != 0) {
+			sql = " where 1=0 ";
+			// key 에 t가 포함되어 있으면 제목에서 검색한다. ? 데이터 세팅할 때 데이터 앞뒤에 %를 붙여서 세팅해 준다.
+			if(key.indexOf("t") >= 0)
+				sql += " or title like ? ";
+			// key 에 c가 포함되어 있으면 내용에서 검색한다.
+			if(key.indexOf("c") >= 0)
+				sql += " or content like ? ";
+			// key 에 w가 포함되어 있으면 작성자에서 검색한다.
+			if(key.indexOf("w") >= 0)
+				sql += " or writer like ? ";
+		}
+		
+		return sql;
+	} // search()의 끝
+	
+	// 1-3. 검색 데이터 세팅을 위한 메서드
+	public Integer searchDataSet(PreparedStatement pstmt, int idx, PageObject pageObject)
+	 throws Exception{
+		
+		String key = pageObject.getKey();
+		String word = pageObject.getWord();
+		
+		//word가 비어있지 않으면 검색을 위한 데이터 세팅 처리한다.
+		if(word != null && word.length() != 0) {
+			// key 에 t가 포함되어 있으면 제목에서 검색한다. ? 데이터 세팅할 때 데이터 앞뒤에 %를 붙여서 세팅해 준다.
+			if(key.indexOf("t") >= 0)
+				pstmt.setString(idx++, "%" + word + "%");
+			// key 에 c가 포함되어 있으면 내용에서 검색한다.
+			if(key.indexOf("c") >= 0)
+				pstmt.setString(idx++, "%" + word + "%");
+			// key 에 w가 포함되어 있으면 작성자에서 검색한다.
+			if(key.indexOf("w") >= 0)
+				pstmt.setString(idx++, "%" + word + "%");
+		}
+		
+		return idx;
+	} // searchDataSet()의 끝
+	
 	
 	// 2-0. 조회수 1 증가
 	public Integer increase(Long no) throws Exception{
