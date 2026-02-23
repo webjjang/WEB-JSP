@@ -39,14 +39,57 @@
 	 }).mouseout(function(){
 		 $(this).removeClass("table-success");
 	 });
+	 
  });
+ 
 </script>
+
+<c:if test="${!empty pageObject.key && !empty pageObject.word }">
+	<!-- empty - null 또는 length 가 0 인 경우 -->
+	<!-- 검색 데이터를 세팅하는 script -->
+	<script type="text/javascript">
+		 // 검색에 대한 처리를 해보자. - key와 word가 비어 있지 않은 경우만 처리한다.
+		$(function(){ // 처리 함수를 받아서 body가 로딩이 끝나며 실행하게 된다.
+			$("#key").val("${pageObject.key}");
+			$("#word").val("${pageObject.word}");
+		});
+	</script>
+	<!-- 검색 데이터를 세팅하는 script의 끝 -->
+</c:if>
+
 </head>
 <body>
 
 <!-- 메인 메뉴 부분 ------------------------------------ -->
 
 	<h2>일반게시판 리스트</h2>
+	
+	<!-- 검색란 처리 -------------------------------------->
+	<div>
+		<form action="list.do" method="get">
+			<input type="hidden" name="perPageNum" value="${pageObject.perPageNum }">
+			
+			<div class="d-inline-flex">
+			  <!-- 넘어오는 검색 정보는 JavaScript로 처리하겠다. -> 데이터가 한개 일때만 가능하다. -->
+			  <select class="form-select" name="key" id="key">
+			  	<option value="t">제목</option>
+			  	<option value="c">내용</option>
+			  	<option value="w">작성자</option>
+			  	<option value="tc">제목/내용</option>
+			  	<option value="tw">제목/작성자</option>
+			  	<option value="cw">내용/작성자</option>
+			  	<option value="tcw">전체</option>
+			  </select>
+				<div class="input-group mb-3">
+				  <input type="text" class="form-control" placeholder="Some text"
+				   name="word" id="word">
+				  <button class="btn btn-success" type="submit">검색</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- 검색란 처리 끝 ----------------------------------->
+	
 	<table class="table">
 		<thead class="table-dark">
 			<tr>
