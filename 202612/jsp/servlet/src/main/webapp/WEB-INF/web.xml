@@ -32,7 +32,19 @@
   	<load-on-startup>2</load-on-startup>
   </servlet>
 
-	 <filter>
+	<!-- 권한 처리를 위한 필터 -->
+ 	  <filter>
+	    <filter-name>authority</filter-name>
+	    <filter-class>com.webjjang.util.filter.AuthorityFilter</filter-class>
+	  </filter>
+	
+	  <filter-mapping>
+	    <filter-name>authority</filter-name>
+	    <url-pattern>*.do</url-pattern>
+	  </filter-mapping> 	
+	
+	<!-- 전체 레이아웃을 잡아주는 sitemesh filter -->
+	  <filter>
 	    <filter-name>sitemesh</filter-name>
 	    <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
 	  </filter>
