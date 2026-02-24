@@ -43,6 +43,11 @@ public class NoticeController implements Controller {
 				// - 1. PageObject를 생성한다. 2. request에서 page / 검색 정보를 받아서 세팅한다.
 				PageObject pageObject = PageObject.getInstance(request);
 				
+				// period 정보를 받아서 세팅한다.
+				String period = request.getParameter("period");
+				if(period != null)
+					pageObject.setPeriod(period);
+				
 				// 생성된 Service를 가져와서 실행 -> Execute가 실행하면 로그를 남긴다.
 				// DB에서 데이터 수집을 해온다.
 				// 사용자에게 제공한다.
