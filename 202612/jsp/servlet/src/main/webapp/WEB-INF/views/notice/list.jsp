@@ -47,6 +47,17 @@
 <!-- 메인 메뉴 부분 : sitemesh ------------------------------------ -->
 
 	<h2>공지 리스트</h2>
+	
+	<c:if test="${!empty login && login.gradeNo == 9 }">
+		<!-- 관리자 메뉴 -->
+		<div class="btn-group">
+		  <a href="list.do?period=pre" class="btn btn-primary">현재공지</a>
+		  <a href="list.do?period=old" class="btn btn-secondary">지난공지</a>
+		  <a href="list.do?period=res" class="btn btn-success">예약공지</a>
+		  <a href="list.do?period=all" class="btn btn-info">전체</a>
+		</div>
+	</c:if>
+	
 	<table class="table">
 		<thead class="table-dark">
 			<tr>
@@ -75,9 +86,12 @@
 		</tbody>
 	</table>
 	<div>
-		<pageNav:pageNav listURI="list.do" pageObject="${pageObject }" />
+		<pageNav:pageNav listURI="list.do" pageObject="${pageObject }"
+		 query="&period=${pageObject.period }" />
 	</div>
-	<a href="writeForm.do" class="btn btn-primary">글등록</a>
+	<c:if test="${!empty login && login.gradeNo == 9 }">
+		<a href="writeForm.do" class="btn btn-primary">등록</a>
+	</c:if>
 	<a href="list.do" class="btn btn-success">새로고침</a>
 </body>
 </html>
