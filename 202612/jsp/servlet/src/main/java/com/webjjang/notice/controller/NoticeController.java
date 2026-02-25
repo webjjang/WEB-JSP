@@ -7,6 +7,7 @@ import com.webjjang.notice.vo.NoticeVO;
 import com.webjjang.util.page.PageObject;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 //Controller
 //- 웹에서 메뉴에 해당되는 URI -> 메뉴 처리
@@ -21,6 +22,9 @@ public class NoticeController implements Controller {
 	@Override
 	public String execute(HttpServletRequest request) {
 		// TODO Auto-generated method stub
+		// 메시지 처리를 위한 세션 꺼내기 
+		HttpSession session = request.getSession();
+		
 		// 잘못된 URI 처리 / 오류를 위한 URL 저장
 		request.setAttribute("url", request.getRequestURL());
 		try { // 정상처리
@@ -36,8 +40,10 @@ public class NoticeController implements Controller {
 			Long no;
 			
 			switch (uri) {
+			// 1. 공지 리스트
 			case "/notice/list.do":
 				// System.out.println("공지사항 리스트 처리");
+				
 				// 페이지 처리를 위한 객체
 				// getInstance() - 객체를 생성해서 넘겨주세요.
 				// - 1. PageObject를 생성한다. 2. request에서 page / 검색 정보를 받아서 세팅한다.
@@ -57,6 +63,39 @@ public class NoticeController implements Controller {
 				request.setAttribute("pageObject", pageObject);
 				// jsp의 위치 정보 "/WEB-INF/views/" + "board/list" + ".jsp"
 				return "notice/list";
+				
+			// 2. 공지 보기
+			case "/notice/view.do":
+				// 넘어 오는 데이터 수집
+				// 데이터 수집 - 번호
+				no = Long.parseLong(request.getParameter("no"));
+				
+				// DB 데이터를 가져온다. request 에 저장한다.
+				request.setAttribute("vo", Execute.execute(Init.getService(uri), no));
+				
+				return "notice/view";
+				
+			// 3-1. 등록 화면
+			case "/notice/writeForm.do":
+				return "notice/writeForm";
+				
+			// 3-2. 등록 처리
+			case "/notice/write.do":
+				// 데이터 수집 - NoticeVO : 제목, 내용, 시작일, 종료일
+				vo = new NoticeVO();
+				vo.setTitle(request.getParameter("title"));
+				vo.setContent(request.getParameter("content"));
+				vo.setStartDate(request.getParameter("startDate"));
+				vo.setEndDate(request.getParameter("endDate"));
+				
+				// 처리 NoticeWriteServcie - NoticeDAO
+				// 등록이 되거나 오류가 난다.
+				Execute.execute(Init.getService(uri), vo);
+				
+				// 등록이 되면 메시지 처리를 한다.
+				session.setAttribute("msg", "새로운 공지가 등록되었습니다.");
+				
+				return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum") ;
 				
 			default:
 				// /WEB-INF/views/ + error/noPage + .jsp

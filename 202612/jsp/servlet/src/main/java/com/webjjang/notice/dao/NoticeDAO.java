@@ -127,4 +127,70 @@ public class NoticeDAO extends DAO {
 		return sql;
 	} // period 메서드의 끝
 	
+	// 2. 공지 보기
+	public NoticeVO view(Long no) throws Exception {
+		NoticeVO vo = null;
+		
+		// 1. 2. 연결
+		con = DB.getConnection();
+		// 3. sql
+		String sql = "select no, title, content,"
+				+ " to_char(startDate, 'yyyy-mm-dd') startDate, "
+				+ " to_char(endDate, 'yyyy-mm-dd') endDate, "
+				+ " to_char(writeDate, 'yyyy-mm-dd') writeDate, "
+				+ " to_char(updateDate, 'yyyy-mm-dd') updateDate "
+				+ " from notice "
+				+ " where no = ? ";
+		// 4. 실행 객체 & 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		pstmt.setLong(1, no);
+		// 5. 실행
+		rs = pstmt.executeQuery();
+		// 6. 저장
+		if(rs != null && rs.next()) {
+			vo = new NoticeVO();
+			vo.setNo(rs.getLong("no"));
+			vo.setTitle(rs.getString("title"));
+			vo.setContent(rs.getString("content"));
+			vo.setStartDate(rs.getString("startDate"));
+			vo.setEndDate(rs.getString("endDate"));
+			vo.setWriteDate(rs.getString("writeDate"));
+			vo.setUpdateDate(rs.getString("updateDate"));
+		} // if 의 끝
+		// 7. 닫기
+		DB.close(con, pstmt, rs);
+		
+		return vo;
+	} // view()의 끝
+	
+	// 3. 공지 등록 처리
+	public Integer write(NoticeVO vo) throws Exception {
+		// 리턴 타입과 동일 변수 선언
+		Integer result = 0;
+		
+		// 1. 2. 연결객체
+		con = DB.getConnection();
+		
+		// 3. sql 작성
+		String sql = "insert into notice(no, title, content, startDate, endDate) "
+				+ " values(notice_seq.nextval, ?, ?, ?, ?)";				
+		
+		// 4. 실행객체 & 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, vo.getTitle());
+		pstmt.setString(2, vo.getContent());
+		pstmt.setString(3, vo.getStartDate());
+		pstmt.setString(4, vo.getEndDate());
+		
+		// 5. 실행
+		result = pstmt.executeUpdate();
+
+		// 6. 결과 저장 - 5 번에서 실행
+		
+		// 7. 닫기
+		DB.close(con, pstmt);
+		
+		return result;
+	}
+	
 } // 클래스의 끝
