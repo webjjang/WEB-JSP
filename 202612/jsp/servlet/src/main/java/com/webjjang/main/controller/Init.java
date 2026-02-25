@@ -10,6 +10,9 @@ import com.webjjang.board.service.BoardListService;
 import com.webjjang.board.service.BoardUpdateService;
 import com.webjjang.board.service.BoardViewService;
 import com.webjjang.board.service.BoardWriteService;
+import com.webjjang.image.controller.ImageController;
+import com.webjjang.image.dao.ImageDAO;
+import com.webjjang.image.service.ImageListService;
 import com.webjjang.main.dao.DAO;
 import com.webjjang.main.service.Service;
 import com.webjjang.member.controller.MemberController;
@@ -22,7 +25,11 @@ import com.webjjang.member.service.MemberListService;
 import com.webjjang.member.service.MemberWriteService;
 import com.webjjang.notice.controller.NoticeController;
 import com.webjjang.notice.dao.NoticeDAO;
+import com.webjjang.notice.service.NoticeDeleteService;
 import com.webjjang.notice.service.NoticeListService;
+import com.webjjang.notice.service.NoticeUpdateService;
+import com.webjjang.notice.service.NoticeViewService;
+import com.webjjang.notice.service.NoticeWriteService;
 import com.webjjang.qna.controller.QnaController;
 import com.webjjang.qna.dao.QnaDAO;
 import com.webjjang.qna.service.QnaAnswerService;
@@ -146,11 +153,28 @@ public class Init extends HttpServlet {
 		controllerMap.put("/notice", new NoticeController());
 		// -- Service 저장
 		serviceMap.put("/notice/list.do", new NoticeListService());
+		serviceMap.put("/notice/view.do", new NoticeViewService());
+		serviceMap.put("/notice/write.do", new NoticeWriteService());
+		serviceMap.put("/notice/update.do", new NoticeUpdateService());
+		serviceMap.put("/notice/delete.do", new NoticeDeleteService());
 		// -- DAO 저장
 		daoMap.put("noticeDAO", new NoticeDAO());
 		// -- service에 dao를 조립한다.
 		serviceMap.get("/notice/list.do").setDAO(daoMap.get("noticeDAO"));
+		serviceMap.get("/notice/view.do").setDAO(daoMap.get("noticeDAO"));
+		serviceMap.get("/notice/write.do").setDAO(daoMap.get("noticeDAO"));
+		serviceMap.get("/notice/update.do").setDAO(daoMap.get("noticeDAO"));
+		serviceMap.get("/notice/delete.do").setDAO(daoMap.get("noticeDAO"));
 		
+		// *** 이미지 게시판 생성 / 저장 / 조립
+		// -- Controller 저장 - 모듈 이름
+		controllerMap.put("/image", new ImageController());
+		// -- Service 저장 - uri
+		serviceMap.put("/image/list.do", new ImageListService());
+		// -- DAO 저장 - 변수 타입
+		daoMap.put("imageDAO", new ImageDAO());
+		// -- service에 dao를 조립한다.
+		serviceMap.get("/image/list.do").setDAO(daoMap.get("imageDAO"));
 		
 		System.out.println("Init.init() - 객체 로딩 완료 -----------------------------------");
 	}

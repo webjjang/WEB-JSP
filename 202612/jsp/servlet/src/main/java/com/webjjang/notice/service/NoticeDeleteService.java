@@ -4,7 +4,7 @@ import com.webjjang.main.dao.DAO;
 import com.webjjang.main.service.Service;
 import com.webjjang.notice.dao.NoticeDAO;
 
-public class NoticeViewService implements Service{
+public class NoticeDeleteService implements Service{
 
 	private NoticeDAO dao = null;
 	
@@ -17,7 +17,7 @@ public class NoticeViewService implements Service{
 	@Override
 	public Object service(Object obj) throws Exception {
 		// TODO Auto-generated method stub
-		return dao.view((Long) obj);
+		return dao.delete((Long) obj);
 	}
 
 }

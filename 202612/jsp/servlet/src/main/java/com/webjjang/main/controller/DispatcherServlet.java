@@ -82,7 +82,7 @@ public class DispatcherServlet extends HttpServlet {
 			jsp = controller.execute(request);
 		} else {
 			System.out.println("DispatcherServlet.service() - 요청하신 페이지가 존재하지 않습니다.");
-			return;
+			jsp = "error/noPage";
 		}
 		
 		// 4. JSP로 forward 또는 redirect

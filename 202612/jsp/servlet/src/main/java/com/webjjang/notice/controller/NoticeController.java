@@ -1,5 +1,7 @@
 package com.webjjang.notice.controller;
 
+import java.net.URLEncoder;
+
 import com.webjjang.main.controller.Controller;
 import com.webjjang.main.controller.Init;
 import com.webjjang.main.service.Execute;
@@ -97,6 +99,58 @@ public class NoticeController implements Controller {
 				
 				return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum") ;
 				
+			// 4-1. 공지 수정 폼
+			case "/notice/updateForm.do":
+				// 넘어 오는 데이터 수집
+				// 데이터 수집 - 번호
+				no = Long.parseLong(request.getParameter("no"));
+				
+				// DB 데이터를 가져온다. request 에 저장한다.
+				request.setAttribute("vo", Execute.execute(Init.getService("/notice/view.do"), no));
+				
+				return "notice/updateForm";
+					
+				// 4-2. 공지 수정 처리
+			case "/notice/update.do":
+				// 넘어 오는 데이터 수집 - vo : 번호, 제목, 내용, 시작일, 종료일
+				vo = new NoticeVO();
+				// 데이터 수집 - 번호
+				vo.setNo(Long.parseLong(request.getParameter("no")));
+				vo.setTitle(request.getParameter("title"));
+				vo.setContent(request.getParameter("content"));
+				vo.setStartDate(request.getParameter("startDate"));
+				vo.setEndDate(request.getParameter("endDate"));
+				
+				// DB 데이터를 주정한다. - update, insert, delete 쿼리를 실행하면 int 데이터가 나온다.
+				result = (Integer) Execute.execute(Init.getService(uri), vo);
+				
+				// 메시지 처리
+				if(result == 1) session.setAttribute("msg", "공지가 수정되었습니다.");
+				else session.setAttribute("msg", "공지 수정에 실패하셨습니다.");
+				
+				return "redirect:view.do?no=" + vo.getNo()
+					+ "&page=" + request.getParameter("page")
+					+ "&perPageNum=" + request.getParameter("perPageNum")
+					+ "&key=" + request.getParameter("key")
+					+ "&word=" + URLEncoder.encode(request.getParameter("word"),"utf-8")
+					+ "&period=" + request.getParameter("period")
+				;
+				
+				// 5. 공지 삭제
+				case "/notice/delete.do":
+					// 넘어 오는 데이터 수집
+					// 데이터 수집 - 번호
+					no = Long.parseLong(request.getParameter("no"));
+					
+					// DB 데이터를 제거한다.
+					result = (Integer) Execute.execute(Init.getService(uri), no);
+					
+					// 메시지 처리
+					if(result == 1) session.setAttribute("msg", "공지가 삭제되었습니다.");
+					else session.setAttribute("msg", "이미 삭제된 공지입니다.");
+					
+					return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum");
+						
 			default:
 				// /WEB-INF/views/ + error/noPage + .jsp
 				return "error/noPage";

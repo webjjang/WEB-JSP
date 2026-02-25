@@ -3,8 +3,9 @@ package com.webjjang.notice.service;
 import com.webjjang.main.dao.DAO;
 import com.webjjang.main.service.Service;
 import com.webjjang.notice.dao.NoticeDAO;
+import com.webjjang.notice.vo.NoticeVO;
 
-public class NoticeViewService implements Service{
+public class NoticeUpdateService implements Service{
 
 	private NoticeDAO dao = null;
 	
@@ -17,7 +18,7 @@ public class NoticeViewService implements Service{
 	@Override
 	public Object service(Object obj) throws Exception {
 		// TODO Auto-generated method stub
-		return dao.view((Long) obj);
+		return dao.update((NoticeVO) obj);
 	}
 
 }

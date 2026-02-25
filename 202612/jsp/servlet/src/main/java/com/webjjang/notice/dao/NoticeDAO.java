@@ -191,6 +191,66 @@ public class NoticeDAO extends DAO {
 		DB.close(con, pstmt);
 		
 		return result;
-	}
+	} // write() 의 끝
+	
+	// 4. 공지 수정 처리
+	public Integer update(NoticeVO vo) throws Exception {
+		// 리턴 타입과 동일 변수 선언
+		Integer result = 0;
+		
+		// 1. 2. 연결객체
+		con = DB.getConnection();
+		
+		// 3. sql 작성
+		String sql = "update notice set title = ?, content = ?, startDate = ?, endDate = ?,"
+				+ " updateDate = sysdate where no = ? ";				
+		
+		// 4. 실행객체 & 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, vo.getTitle());
+		pstmt.setString(2, vo.getContent());
+		pstmt.setString(3, vo.getStartDate());
+		pstmt.setString(4, vo.getEndDate());
+		pstmt.setLong(5, vo.getNo());
+		
+		// 5. 실행
+		result = pstmt.executeUpdate();
+		
+		// 6. 결과 저장 - 5 번에서 실행
+		
+		// 7. 닫기
+		DB.close(con, pstmt);
+		
+		return result;
+	} // update()의 끝
+	
+	// 5. 공지 삭제 처리
+	public Integer delete(Long no) throws Exception {
+		// 리턴 타입과 동일 변수 선언
+		Integer result = 0;
+		
+		// 1. 2. 연결객체
+		con = DB.getConnection();
+		
+		// 3. sql 작성
+		String sql = "delete from notice "
+				+ " where no = ? ";				
+		
+		// 4. 실행객체 & 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		pstmt.setLong(1, no);
+		
+		// 5. 실행
+		result = pstmt.executeUpdate();
+		
+		// 6. 결과 저장 - 5 번에서 실행
+		
+		// 7. 닫기
+		DB.close(con, pstmt);
+		
+		return result;
+	} // delete()의 끝
+	
+	
 	
 } // 클래스의 끝
