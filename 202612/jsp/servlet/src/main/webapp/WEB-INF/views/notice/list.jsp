@@ -33,7 +33,7 @@
 	 	// location 객체 - BOM 객체 중에 하나.
 	 	// location.href = "view.jsp?no=" + no; // location = "url" == location.href = "url"
 	 	// location = "url" : 자동으로 location.href에 들어간다.
-	 	location = "view.do?no=" + no + "&${pageObject.pageQuery}";
+	 	location = "view.do?no=" + no + "&${pageObject.pageQuery}&period=${pageObject.period}";
 	 }).mouseover(function(){
 		 $(this).addClass("table-success");
 	 }).mouseout(function(){
