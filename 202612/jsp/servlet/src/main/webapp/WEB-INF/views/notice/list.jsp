@@ -27,7 +27,12 @@
 	 	// 글번호 수집
 	 	// text() - 글자만 가져온다. html() - tag도 가져온다. :: jQuery
 	 	// js의 변수는 타입이 없다. - 변수 = 10 - 선언 없이 바로 사용가능. var로 변수 선언. let으로 변수 선언.-지역변수 구분 확실
-	 	let no = $(this).find(".no").text(); // js = jQuery
+	 	
+	 	// 글번호가 눈으로 보이는 경우 태그에 no 클래스 속성 지정해서 찾는다.
+	 	// let no = $(this).find(".no").text(); // js = jQuery
+	 	// 글번호가 눈으로 안보이는 경우서 태그 안에 data-항목이름="값" 형식으로 숨겨 놓는다.
+	 	let no = $(this).data("no"); // js = jQuery
+	 	
 	 	// alert("클릭한 글번호 : " + no); // js
 	 	// 페이지 이동 시키기 - 브라우저 객체 중 location 객체가 있다. 보여지는 페이지들의 정보를 가지고 있는 객체
 	 	// location 객체 - BOM 객체 중에 하나.
@@ -61,7 +66,7 @@
 	<table class="table">
 		<thead class="table-dark">
 			<tr>
-				<th>번호</th>
+				<!-- <th>번호</th> -->
 				<th>제목</th>
 				<th>공지 기간</th>
 				<th>최종수정일</th>
@@ -75,8 +80,8 @@
 		</c:if>
 		<c:if test="${!empty list }">
 			<c:forEach items="${list }" var="vo" >
-				<tr class="dataRow">
-					<td class="no">${vo.no }</td>
+				<tr class="dataRow" data-no="${vo.no }">
+					<%-- <td class="no">${vo.no }</td> --%>
 					<td>${vo.title }</td>
 					<td>${vo.startDate }~${vo.endDate }</td>
 					<td>${vo.updateDate }</td>

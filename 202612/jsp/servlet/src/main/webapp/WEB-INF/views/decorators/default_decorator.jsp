@@ -16,6 +16,10 @@
 <!-- jQuery 라이브러리 등록 - 자바스크립트 함수 : jQuery() ==> $() -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
+<!-- jQuery UI 라이브러리 등록 : datepicker 등 -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.14.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
+
 <!-- icon lib 등록 - awesome 4 -->
 <link rel="stylesheet"
  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">

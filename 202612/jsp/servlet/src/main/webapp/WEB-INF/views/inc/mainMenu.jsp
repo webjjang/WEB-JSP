@@ -21,6 +21,9 @@
         <li class="nav-item">
           <a class="nav-link" href="/qna/list.do">질문답변</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/image/list.do">이미지</a>
+        </li>
         <c:if test="${!empty login && login.gradeNo == 9 }">
         <!-- 관리자 메뉴 -->
 	        <li class="nav-item">
