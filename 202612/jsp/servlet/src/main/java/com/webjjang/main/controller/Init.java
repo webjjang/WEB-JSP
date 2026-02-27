@@ -12,7 +12,12 @@ import com.webjjang.board.service.BoardViewService;
 import com.webjjang.board.service.BoardWriteService;
 import com.webjjang.image.controller.ImageController;
 import com.webjjang.image.dao.ImageDAO;
+import com.webjjang.image.service.ImageChangeImageService;
+import com.webjjang.image.service.ImageDeleteService;
 import com.webjjang.image.service.ImageListService;
+import com.webjjang.image.service.ImageUpdateService;
+import com.webjjang.image.service.ImageViewService;
+import com.webjjang.image.service.ImageWriteService;
 import com.webjjang.main.dao.DAO;
 import com.webjjang.main.service.Service;
 import com.webjjang.member.controller.MemberController;
@@ -171,10 +176,20 @@ public class Init extends HttpServlet {
 		controllerMap.put("/image", new ImageController());
 		// -- Service 저장 - uri
 		serviceMap.put("/image/list.do", new ImageListService());
+		serviceMap.put("/image/view.do", new ImageViewService());
+		serviceMap.put("/image/write.do", new ImageWriteService());
+		serviceMap.put("/image/update.do", new ImageUpdateService());
+		serviceMap.put("/image/changeImage.do", new ImageChangeImageService());
+		serviceMap.put("/image/delete.do", new ImageDeleteService());
 		// -- DAO 저장 - 변수 타입
 		daoMap.put("imageDAO", new ImageDAO());
 		// -- service에 dao를 조립한다.
 		serviceMap.get("/image/list.do").setDAO(daoMap.get("imageDAO"));
+		serviceMap.get("/image/view.do").setDAO(daoMap.get("imageDAO"));
+		serviceMap.get("/image/write.do").setDAO(daoMap.get("imageDAO"));
+		serviceMap.get("/image/update.do").setDAO(daoMap.get("imageDAO"));
+		serviceMap.get("/image/changeImage.do").setDAO(daoMap.get("imageDAO"));
+		serviceMap.get("/image/delete.do").setDAO(daoMap.get("imageDAO"));
 		
 		System.out.println("Init.init() - 객체 로딩 완료 -----------------------------------");
 	}
