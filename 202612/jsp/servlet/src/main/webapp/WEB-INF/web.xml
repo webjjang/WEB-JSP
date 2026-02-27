@@ -11,8 +11,22 @@
   <servlet>
   	<servlet-name>dispatchServlet</servlet-name>
   	<servlet-class>com.webjjang.main.controller.DispatcherServlet</servlet-class>
-  	<!-- 서버가 실행될때 한번 불러라. init() 호출되서 실행된다. -->
+    	<!-- 서버가 실행될때 한번 불러라. init() 호출되서 실행된다. -->
   	<load-on-startup>1</load-on-startup>
+  	
+  	<!-- 파일 업로드 설정 -->
+  	<multipart-config>
+  		<!-- 업로드 임시 저장 경로 : 폴더가 반드시 존재하고 있어야 한다. 
+  		 	 업로드 파일이 작으면 메인메모리 사용, 크면 임시 파일로 저장해서 사용한다. -->
+  		<location>D:/leeyh/upload/temp</location>
+  		<!-- 최대 파일 크기(10MB-10*1024*1024) -->
+  		<max-file-size>10485760</max-file-size>
+  		<!--  최대 요청 크기 (100MB) -->
+  		<max-request-size>104857600</max-request-size>
+  		<!-- 파일이 메모리에 저장되는 임계값(1MB)-> 커지면 임시 파일로 저장 -->
+  		<file-size-threshold>1048576</file-size-threshold>
+  	</multipart-config>
+  	
   </servlet>
   
   <!-- servlet에 URI를 매핑시틴다. -->
