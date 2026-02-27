@@ -19,11 +19,14 @@
  $(function(){
 	 // alert("jQuery 영역이 실행됐다.~~~"); // 자바 스크립트의 팝업 열기
 	 $("#deleteBtn").click(function(){
-		// alert("삭제 버튼 클릭");
-		// 입력된 비밀번호 삭제
-		$("#pw").val(""); //jQuery val() - getter, val(data) - setter
-		// disply 속성에서 보이게 show(), 안보이게 hide(), 보이면 안보이게 안보이면 보이게 toggle()
-		$("#deleteDiv").toggle();
+		if(!confirm("정말 삭제하시겠습니까?")) return false; // 페이지 이동을 무시시킨다.
+		
+		// 삭제하러 간다. 
+		// 1. 밑에 모달 form의 action속성을 바꾼다.
+		$("#modalForm").attr("action", "delete.do");
+		// 2. submit 처리를 한다.
+		$("#modalForm").submit();
+		
 	 });
  });
 </script>
@@ -87,7 +90,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-		<form action="changeImage.do" method="post" enctype="multipart/form-data">
+		<form action="changeImage.do" method="post" enctype="multipart/form-data" id="modalForm">
 		<input name="no" value="${param.no }" type="hidden">
 		<input name="page" value="${param.page }" type="hidden">
 		<input name="perPageNum" value="${param.perPageNum }" type="hidden">

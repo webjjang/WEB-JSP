@@ -104,10 +104,10 @@
 		  			<div class="card dataRow">
 					  <img class="card-img-top" src="${vo.fileName }" alt="Card image">
 					  <div class="card-body">
-					    <h4 class="card-title">
+					    <h5 class="card-title">
 					    	<span class="no">${vo.no}</span>. 
 					    	${vo.title }
-					    </h4>
+					    </h5>
 					    <p class="card-text d-flex justify-content-between align-items-center">
 					    	<span>
 					    		${vo.name }(${vo.id })
