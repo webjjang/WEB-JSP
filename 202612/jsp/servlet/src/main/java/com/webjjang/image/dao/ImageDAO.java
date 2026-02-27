@@ -180,6 +180,28 @@ public class ImageDAO extends DAO{
 		return result;
 	} // changeImage()의 끝
 	
+	// 5. 이미지 삭제
+	public Integer delete(ImageVO vo) throws Exception {
+		Integer result = 0;
+		
+		//1. 2.
+		con = DB.getConnection();
+		//3.
+		String sql = "delete from image "
+				+ " where no = ? and id = ? ";
+		//4.
+		pstmt = con.prepareStatement(sql);
+		pstmt.setLong(1, vo.getNo());
+		pstmt.setString(2, vo.getId());
+		//5.
+		result = pstmt.executeUpdate();
+		//6. 5번에 포함.
+		//7.
+		DB.close(con, pstmt);
+		
+		return result;
+	} // delete()의 끝
+	
 	
 	
 } // 클래스의 끝

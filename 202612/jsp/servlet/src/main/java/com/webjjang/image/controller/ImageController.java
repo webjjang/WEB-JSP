@@ -236,6 +236,38 @@ public class ImageController implements Controller {
 				+ "&key=" + request.getParameter("key")
 				+ "&word" + request.getParameter("word");
 					
+			case "/image/delete.do":
+				// 넘어오는 데이터 받기 - 번호
+				vo = new ImageVO();
+				vo.setNo(Long.parseLong(request.getParameter("no")));
+				// session에서 아이디 받는다. - 하드코딩
+				vo.setId("test");
+				
+				System.out.println("ImageController.execute().vo - " + vo);
+				
+				// DB에서 삭제 하러가기
+				result = (Integer) Execute.execute(Init.getService(uri), vo);
+				
+				// 삭제된 경우
+				if(result ==1) {
+					// 메시지 처리
+					session.setAttribute("msg", "이미지가 삭제 되었습니다.");
+					// 이전 파일 지우기
+					String delFileName = request.getParameter("delFileName");
+					new File(request.getServletContext().getRealPath(delFileName)).delete(); // 삭제 처리 
+					// 리스트로 이동 시킨다. - perPageNum
+					return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum");
+				} else { // 삭제가 안된 경우
+					// 메시지 처리
+					session.setAttribute("msg", "이미지가 삭제에 실패하였습니다. 정보를 확인해 주세요.");
+					// 이미지 보기로 이동시킨다.
+					return "redirect:view.do?no=" + request.getParameter("no")
+					+ "&page=" + request.getParameter("page")
+					+ "&perPageNum=" + request.getParameter("perPageNum")
+					+ "&key=" + request.getParameter("key")
+					+ "&word" + request.getParameter("word");
+				}
+			
 			default:
 				// /WEB-INF/views/ + error/noPage + .jsp
 				return "error/noPage";
